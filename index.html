@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Boîte — clique et assume</title>
+<meta name="description" content="Clique sur la boîte. Tu ne sais pas ce qui va sortir. Ni toi ni moi.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: radial-gradient(circle at 50% 30%, #1b2233 0%, #0a0d14 70%);
+    color: #e6e6e6;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 20px;
+    overflow: hidden; user-select: none;
+  }
+
+  h1 {
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    font-weight: 800; letter-spacing: -1px; text-align: center;
+    background: linear-gradient(90deg,#ff9f43,#ff6b35,#ff4d6d);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 6px;
+  }
+  .sub {
+    color: #6e7681; font-size: clamp(.78rem, 2.5vw, .92rem);
+    text-align: center; margin-bottom: 32px;
+  }
+
+  /* --- LA BOÎTE --- */
+  .scene { position: relative; display: flex; align-items: center; justify-content: center; }
+
+  .boite {
+    width: clamp(160px, 42vw, 230px);
+    height: clamp(160px, 42vw, 230px);
+    position: relative; cursor: pointer;
+    transition: transform .12s ease;
+    filter: drop-shadow(0 18px 32px rgba(0,0,0,.6));
+  }
+  .boite:hover { transform: translateY(-6px) scale(1.03); }
+  .boite:active { transform: translateY(2px) scale(.97); }
+  .boite.secoue { animation: secousse .5s ease; }
+  @keyframes secousse {
+    0%,100% { transform: translateX(0) rotate(0); }
+    15% { transform: translateX(-10px) rotate(-3deg); }
+    30% { transform: translateX(9px) rotate(3deg); }
+    45% { transform: translateX(-7px) rotate(-2deg); }
+    60% { transform: translateX(6px) rotate(2deg); }
+    80% { transform: translateX(-3px) rotate(-1deg); }
+  }
+
+  .couvercle {
+    position: absolute; top: 0; left: 0; width: 100%;
+    transform-origin: 50% 100%;
+    transition: transform .35s cubic-bezier(.3,-0.4,.4,1.6);
+  }
+  .boite.ouverte .couvercle { transform: rotate(-108deg) translateY(-6%); }
+
+  /* --- CONTENU QUI SORT --- */
+  .contenu {
+    position: absolute; left: 50%; bottom: 42%;
+    transform: translate(-50%, 0) scale(.3);
+    opacity: 0; pointer-events: none;
+    transition: transform .45s cubic-bezier(.2,-0.3,.3,1.5), opacity .3s;
+    white-space: nowrap; text-align: center;
+    font-weight: 800; letter-spacing: -1px;
+    font-size: clamp(1.3rem, 6vw, 2.4rem);
+    text-shadow: 0 4px 24px rgba(0,0,0,.8);
+    max-width: 92vw;
+  }
+  .boite.ouverte .contenu {
+    opacity: 1;
+    transform: translate(-50%, -120%) scale(1);
+  }
+
+  /* --- BOUTON --- */
+  .hint {
+    margin-top: 34px; color: #484f58; font-size: .8rem; text-align: center;
+    min-height: 1.2em;
+  }
+  .compteur {
+    margin-top: 22px; font-size: .78rem; color: #484f58;
+  }
+  .compteur b { color: #ff9f43; }
+
+  /* --- EMPLACEMENT PUB --- */
+  .pub {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    width: min(92vw, 728px); min-height: 90px;
+    border: 1px dashed #21262d; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #30363d; font-size: .72rem; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .pub.haut { top: 12px; }
+  .pub.bas { bottom: 12px; }
+
+  footer {
+    position: fixed; bottom: 4px; right: 10px;
+    font-size: .65rem; color: #21262d;
+  }
+
+  @media (max-height: 640px) {
+    .pub { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="pub haut" id="pub-haut">Emplacement publicitaire</div>
+
+<h1>La Boîte</h1>
+<p class="sub">Clique dessus. Tu ne sais pas ce qui va sortir.<br>Lui non plus.</p>
+
+<div class="scene">
+  <div class="boite" id="boite" role="button" tabindex="0" aria-label="Ouvrir la boîte">
+    <svg class="couvercle" viewBox="0 0 200 70" aria-hidden="true">
+      <defs>
+        <linearGradient id="gc" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffb066"/>
+          <stop offset="100%" stop-color="#e8722a"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="18" width="200" height="52" rx="7" fill="url(#gc)"/>
+      <rect x="0" y="18" width="200" height="10" rx="5" fill="#ffd0a3" opacity=".55"/>
+      <rect x="88" y="18" width="24" height="52" fill="#c25a1c" opacity=".55"/>
+    </svg>
+    <svg viewBox="0 0 200 190" aria-hidden="true" style="position:absolute;top:0;left:0;width:100%;height:100%">
+      <defs>
+        <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8722a"/>
+          <stop offset="100%" stop-color="#a8440f"/>
+        </linearGradient>
+      </defs>
+      <rect x="6" y="62" width="188" height="122" rx="9" fill="url(#gb)"/>
+      <rect x="6" y="62" width="188" height="14" rx="7" fill="#ffb066" opacity=".5"/>
+      <rect x="86" y="62" width="28" height="122" fill="#8c3609" opacity=".45"/>
+      <text x="100" y="135" text-anchor="middle" font-size="42" font-weight="bold"
+            fill="#ffffff" opacity=".85" font-family="system-ui, sans-serif">?</text>
+    </svg>
+    <div class="contenu" id="contenu"></div>
+  </div>
+</div>
+
+<p class="hint" id="hint">Clique pour ouvrir</p>
+<p class="compteur">Boîtes ouvertes : <b id="nb">0</b></p>
+
+<div class="pub bas" id="pub-bas">Emplacement publicitaire</div>
+<footer>v1 — prototype local</footer>
+
+<script>
+// ============================================================
+//  CONTENU DES BOÎTES
+//  Humour geek décalé, publiable (pas de vulgarité).
+//  Chaque entrée : texte + couleur.
+// ============================================================
+const SURPRISES = [
+  { t: "Un développeur.",            c: "#3fb950", s: "Il dit que ça marche chez lui." },
+  { t: "Une mise en prod.",          c: "#f85149", s: "Un vendredi. À 17 h 58." },
+  { t: "Un stagiaire.",              c: "#58a6ff", s: "Il a déjà tout cassé." },
+  { t: "Un bug.",                    c: "#d29922", s: "Non reproductible, évidemment." },
+  { t: "La doc.",                    c: "#8b949e", s: "Elle était vide. Surprise." },
+  { t: "Un serveur.",                c: "#ff6b35", s: "Il redémarre. Encore." },
+  { t: "Un café.",                   c: "#a371f7", s: "Le 7e de la journée." },
+  { t: "Une deadline.",              c: "#f85149", s: "C'était hier." },
+  { t: "Un merge conflict.",         c: "#ff9f43", s: "Dans 4 000 lignes." },
+  { t: "Le service RH.",             c: "#58a6ff", s: "Ils veulent te parler." },
+  { t: "Un tech lead.",              c: "#3fb950", s: "Il a renommé ta variable." },
+  { t: "Un ticket urgent.",          c: "#d29922", s: "Créé il y a 6 mois." },
+  { t: "Une réunion.",               c: "#8b949e", s: "Qui aurait pu être un mail." },
+  { t: "Le CTO.",                    c: "#a371f7", s: "Il a une idée. Cours." },
+  { t: "Un rollback.",               c: "#ff6b35", s: "Trop tard, c'est en prod." },
+  { t: "Le stagiaire réseau.",       c: "#58a6ff", s: "Il a débranché le bon câble." },
+  { t: "Un utilisateur.",            c: "#3fb950", s: "« Ça marchait avant. »" },
+  { t: "Une migration BDD.",         c: "#f85149", s: "Sans sauvegarde. Évidemment." },
+  { t: "Le DevOps.",                 c: "#d29922", s: "Il a dit « c'est pas mon problème »." },
+  { t: "Un 500.",                    c: "#f85149", s: "Erreur interne. Très interne." },
+  { t: "Le stagiaire cloud.",        c: "#58a6ff", s: "Facture de 40 000 €." },
+  { t: "Un hotfix.",                 c: "#ff9f43", s: "Qui crée 3 nouveaux bugs." },
+  { t: "Une IA.",                    c: "#a371f7", s: "Elle a pris ton poste. Bisous." },
+  { t: "Le patron.",                 c: "#8b949e", s: "« On peut pas faire plus simple ? »" },
+  { t: "Rien.",                      c: "#484f58", s: "Absolument rien. Bien joué." },
+];
+
+const boite    = document.getElementById('boite');
+const contenu  = document.getElementById('contenu');
+const hint     = document.getElementById('hint');
+const nbEl     = document.getElementById('nb');
+
+let ouverte = false;
+let compteur = 0;
+
+function tirer() {
+  return SURPRISES[Math.floor(Math.random() * SURPRISES.length)];
+}
+
+function ouvrir() {
+  if (ouverte) {
+    // refermer
+    boite.classList.remove('ouverte');
+    ouverte = false;
+    hint.textContent = "Clique pour rouvrir";
+    return;
+  }
+
+  const s = tirer();
+  contenu.textContent = s.t;
+  contenu.style.color = s.c;
+
+  boite.classList.add('secoue');
+  setTimeout(() => {
+    boite.classList.remove('secoue');
+    boite.classList.add('ouverte');
+  }, 320);
+
+  ouverte = true;
+  compteur++;
+  nbEl.textContent = compteur;
+  hint.textContent = s.s;
+}
+
+boite.addEventListener('click', ouvrir);
+boite.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ouvrir(); }
+});
+
+// ---- Emplacements publicitaires ----
+// Remplacer le contenu de #pub-haut / #pub-bas par le code de la régie
+// (AdSense, affiliation, etc.) une fois le site en ligne.
+// Le CSS est déjà dimensionné aux formats standards (728x90, 320x100).
+</script>
+</body>
+</html>
