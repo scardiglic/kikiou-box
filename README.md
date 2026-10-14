@@ -64,12 +64,10 @@ Un second clic referme la boîte.
 
 | Élément | Valeur |
 |---|---|
-| **En ligne** | https://scardiglic.github.io/laboite/ |
-| **Dépôt** | github.com/scardiglic/laboite |
+| **En ligne** | https://scardiglic.github.io/kikiou-box/ |
+| **Dépôt** | github.com/scardiglic/kikiou-box |
 | **Local** | /home/hermes/projets/web/kikiou-box/ |
 
-> **Note** : l'URL GitHub Pages contient encore « laboite ». Le renommage
-> du dépôt est à faire (voir « Prochaines étapes »).
 
 ---
 
@@ -116,7 +114,7 @@ Le CSS est déjà dimensionné aux formats standards.
 ## Prochaines étapes
 
 - [ ] Acheter le domaine `kikioubox.com` (disponible, vérifié)
-- [ ] Renommer le dépôt GitHub de `laboite` vers `kikiou-box`
+- [x] Renommer le dépôt GitHub de `laboite` vers `kikiou-box` ✅
 - [ ] Vérifier les pseudos `kikioubox` sur X, YouTube et Twitch
 - [ ] Ajouter des effets sonores
 - [ ] Bouton de partage social (moteur de viralité)
