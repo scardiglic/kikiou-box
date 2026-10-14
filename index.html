@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>La Boîte — clique et assume</title>
-<meta name="description" content="Clique sur la boîte. Tu ne sais pas ce qui va sortir. Ni toi ni moi.">
+<meta name="description" content="Clique sur la boîte. Un petit truc en sort. Tu ne sais pas lequel.">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
@@ -27,15 +27,15 @@
   }
   .sub {
     color: #6e7681; font-size: clamp(.78rem, 2.5vw, .92rem);
-    text-align: center; margin-bottom: 32px;
+    text-align: center; margin-bottom: 28px;
   }
 
-  /* --- LA BOÎTE --- */
+  /* --- SCENE --- */
   .scene { position: relative; display: flex; align-items: center; justify-content: center; }
 
   .boite {
-    width: clamp(160px, 42vw, 230px);
-    height: clamp(160px, 42vw, 230px);
+    width: clamp(170px, 44vw, 240px);
+    height: clamp(170px, 44vw, 240px);
     position: relative; cursor: pointer;
     transition: transform .12s ease;
     filter: drop-shadow(0 18px 32px rgba(0,0,0,.6));
@@ -55,38 +55,40 @@
   .couvercle {
     position: absolute; top: 0; left: 0; width: 100%;
     transform-origin: 50% 100%;
-    transition: transform .35s cubic-bezier(.3,-0.4,.4,1.6);
+    transition: transform .38s cubic-bezier(.3,-0.4,.4,1.6);
+    z-index: 3;
   }
-  .boite.ouverte .couvercle { transform: rotate(-108deg) translateY(-6%); }
+  .boite.ouverte .couvercle { transform: rotate(-112deg) translateY(-8%); }
 
-  /* --- CONTENU QUI SORT --- */
-  .contenu {
-    position: absolute; left: 50%; bottom: 42%;
-    transform: translate(-50%, 0) scale(.3);
+  /* --- CREATURE --- */
+  .creature {
+    position: absolute; left: 50%; bottom: 34%;
+    width: 48%; height: auto;
+    transform: translate(-50%, 12%) scale(.2) rotate(-8deg);
     opacity: 0; pointer-events: none;
-    transition: transform .45s cubic-bezier(.2,-0.3,.3,1.5), opacity .3s;
-    white-space: nowrap; text-align: center;
-    font-weight: 800; letter-spacing: -1px;
-    font-size: clamp(1.3rem, 6vw, 2.4rem);
-    text-shadow: 0 4px 24px rgba(0,0,0,.8);
-    max-width: 92vw;
+    transition: transform .5s cubic-bezier(.2,-0.3,.3,1.5), opacity .25s;
+    z-index: 2;
   }
-  .boite.ouverte .contenu {
+  .boite.ouverte .creature {
     opacity: 1;
-    transform: translate(-50%, -120%) scale(1);
+    transform: translate(-50%, -105%) scale(1) rotate(0deg);
+  }
+  .boite.ouverte .creature.flotte {
+    animation: flotte 2.4s ease-in-out infinite;
+  }
+  @keyframes flotte {
+    0%,100% { transform: translate(-50%, -105%) scale(1) rotate(-2deg); }
+    50%     { transform: translate(-50%, -115%) scale(1) rotate(2deg); }
   }
 
-  /* --- BOUTON --- */
   .hint {
-    margin-top: 34px; color: #484f58; font-size: .8rem; text-align: center;
-    min-height: 1.2em;
+    margin-top: 34px; color: #484f58; font-size: .82rem; text-align: center;
+    min-height: 1.2em; transition: color .3s; font-weight: 600;
   }
-  .compteur {
-    margin-top: 22px; font-size: .78rem; color: #484f58;
-  }
+  .hint.actif { color: #ff9f43; }
+  .compteur { margin-top: 18px; font-size: .78rem; color: #484f58; }
   .compteur b { color: #ff9f43; }
 
-  /* --- EMPLACEMENT PUB --- */
   .pub {
     position: fixed; left: 50%; transform: translateX(-50%);
     width: min(92vw, 728px); min-height: 90px;
@@ -98,14 +100,9 @@
   .pub.haut { top: 12px; }
   .pub.bas { bottom: 12px; }
 
-  footer {
-    position: fixed; bottom: 4px; right: 10px;
-    font-size: .65rem; color: #21262d;
-  }
+  footer { position: fixed; bottom: 4px; right: 10px; font-size: .65rem; color: #21262d; }
 
-  @media (max-height: 640px) {
-    .pub { display: none; }
-  }
+  @media (max-height: 660px) { .pub { display: none; } }
 </style>
 </head>
 <body>
@@ -113,10 +110,11 @@
 <div class="pub haut" id="pub-haut">Emplacement publicitaire</div>
 
 <h1>La Boîte</h1>
-<p class="sub">Clique dessus. Tu ne sais pas ce qui va sortir.<br>Lui non plus.</p>
+<p class="sub">Clique dessus. Un petit truc en sort.<br>Tu ne sais pas lequel.</p>
 
 <div class="scene">
   <div class="boite" id="boite" role="button" tabindex="0" aria-label="Ouvrir la boîte">
+
     <svg class="couvercle" viewBox="0 0 200 70" aria-hidden="true">
       <defs>
         <linearGradient id="gc" x1="0" y1="0" x2="0" y2="1">
@@ -128,7 +126,11 @@
       <rect x="0" y="18" width="200" height="10" rx="5" fill="#ffd0a3" opacity=".55"/>
       <rect x="88" y="18" width="24" height="52" fill="#c25a1c" opacity=".55"/>
     </svg>
-    <svg viewBox="0 0 200 190" aria-hidden="true" style="position:absolute;top:0;left:0;width:100%;height:100%">
+
+    <svg class="creature" id="creature" viewBox="0 0 120 130" aria-hidden="true"></svg>
+
+    <svg viewBox="0 0 200 190" aria-hidden="true"
+         style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1">
       <defs>
         <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#e8722a"/>
@@ -141,7 +143,6 @@
       <text x="100" y="135" text-anchor="middle" font-size="42" font-weight="bold"
             fill="#ffffff" opacity=".85" font-family="system-ui, sans-serif">?</text>
     </svg>
-    <div class="contenu" id="contenu"></div>
   </div>
 </div>
 
@@ -149,88 +150,239 @@
 <p class="compteur">Boîtes ouvertes : <b id="nb">0</b></p>
 
 <div class="pub bas" id="pub-bas">Emplacement publicitaire</div>
-<footer>v1 — prototype local</footer>
+<footer>v2 — créature</footer>
 
 <script>
 // ============================================================
-//  CONTENU DES BOÎTES
-//  Humour geek décalé, publiable (pas de vulgarité).
-//  Chaque entrée : texte + couleur.
+//  LA CRÉATURE — un seul personnage, 25 expressions
+//
+//  Forme : blob arrondi, deux oreilles, gros yeux, joues roses.
+//  Chaque expression change yeux / bouche / accessoires / couleur.
 // ============================================================
-const SURPRISES = [
-  { t: "Un développeur.",            c: "#3fb950", s: "Il dit que ça marche chez lui." },
-  { t: "Une mise en prod.",          c: "#f85149", s: "Un vendredi. À 17 h 58." },
-  { t: "Un stagiaire.",              c: "#58a6ff", s: "Il a déjà tout cassé." },
-  { t: "Un bug.",                    c: "#d29922", s: "Non reproductible, évidemment." },
-  { t: "La doc.",                    c: "#8b949e", s: "Elle était vide. Surprise." },
-  { t: "Un serveur.",                c: "#ff6b35", s: "Il redémarre. Encore." },
-  { t: "Un café.",                   c: "#a371f7", s: "Le 7e de la journée." },
-  { t: "Une deadline.",              c: "#f85149", s: "C'était hier." },
-  { t: "Un merge conflict.",         c: "#ff9f43", s: "Dans 4 000 lignes." },
-  { t: "Le service RH.",             c: "#58a6ff", s: "Ils veulent te parler." },
-  { t: "Un tech lead.",              c: "#3fb950", s: "Il a renommé ta variable." },
-  { t: "Un ticket urgent.",          c: "#d29922", s: "Créé il y a 6 mois." },
-  { t: "Une réunion.",               c: "#8b949e", s: "Qui aurait pu être un mail." },
-  { t: "Le CTO.",                    c: "#a371f7", s: "Il a une idée. Cours." },
-  { t: "Un rollback.",               c: "#ff6b35", s: "Trop tard, c'est en prod." },
-  { t: "Le stagiaire réseau.",       c: "#58a6ff", s: "Il a débranché le bon câble." },
-  { t: "Un utilisateur.",            c: "#3fb950", s: "« Ça marchait avant. »" },
-  { t: "Une migration BDD.",         c: "#f85149", s: "Sans sauvegarde. Évidemment." },
-  { t: "Le DevOps.",                 c: "#d29922", s: "Il a dit « c'est pas mon problème »." },
-  { t: "Un 500.",                    c: "#f85149", s: "Erreur interne. Très interne." },
-  { t: "Le stagiaire cloud.",        c: "#58a6ff", s: "Facture de 40 000 €." },
-  { t: "Un hotfix.",                 c: "#ff9f43", s: "Qui crée 3 nouveaux bugs." },
-  { t: "Une IA.",                    c: "#a371f7", s: "Elle a pris ton poste. Bisous." },
-  { t: "Le patron.",                 c: "#8b949e", s: "« On peut pas faire plus simple ? »" },
-  { t: "Rien.",                      c: "#484f58", s: "Absolument rien. Bien joué." },
+const EXPRESSIONS = [
+  { nom: "Surpris",   coul: "#ffb3c7", yeux: "etonnes",  bouche: "o",       joues: true,  extra: "" },
+  { nom: "Content",   coul: "#ffd97d", yeux: "ouverts",  bouche: "sourire", joues: true,  extra: "" },
+  { nom: "Endormi",   coul: "#b8c4d4", yeux: "endormis", bouche: "o",       joues: false, extra: "" },
+  { nom: "Amoureux",  coul: "#ff9ec4", yeux: "coeurs",   bouche: "sourire", joues: true,  extra: "coeur_vole" },
+  { nom: "En colère", coul: "#ff7a6b", yeux: "malins",   bouche: "fronce",  joues: false, extra: "feu" },
+  { nom: "Malin",     coul: "#9ee493", yeux: "malins",   bouche: "sourire", joues: true,  extra: "" },
+  { nom: "Triste",    coul: "#a8c0ff", yeux: "tristes",  bouche: "moue",    joues: false, extra: "larme" },
+  { nom: "Roi",       coul: "#ffd97d", yeux: "ouverts",  bouche: "sourire", joues: true,  extra: "couronne" },
+  { nom: "Savant",    coul: "#c4b5fd", yeux: "ouverts",  bouche: "plat",    joues: false, extra: "lunettes" },
+  { nom: "Riche",     coul: "#a7e8bd", yeux: "dollars",  bouche: "rire",    joues: true,  extra: "" },
+  { nom: "Effrayé",   coul: "#c9b8e8", yeux: "etonnes",  bouche: "dents",   joues: false, extra: "" },
+  { nom: "Chapeau",   coul: "#ffb3c7", yeux: "ouverts",  bouche: "sourire", joues: true,  extra: "chapeau" },
+  { nom: "Étoilé",    coul: "#ffe066", yeux: "etoiles",  bouche: "o",       joues: true,  extra: "" },
+  { nom: "Fantôme",   coul: "#c8c8c8", yeux: "croix",    bouche: "plat",    joues: false, extra: "halo" },
+  { nom: "Furieux",   coul: "#ff5c5c", yeux: "malins",   bouche: "dents",   joues: false, extra: "feu" },
+  { nom: "Zen",       coul: "#a0e7e5", yeux: "endormis", bouche: "sourire", joues: true,  extra: "" },
+  { nom: "Gourmand",  coul: "#ffcba4", yeux: "ouverts",  bouche: "langue",  joues: true,  extra: "sucre" },
+  { nom: "Déçu",      coul: "#b0b8c4", yeux: "tristes",  bouche: "moue",    joues: false, extra: "" },
+  { nom: "Excité",    coul: "#ffd97d", yeux: "etoiles",  bouche: "rire",    joues: true,  extra: "eclair" },
+  { nom: "Timide",    coul: "#ffc9de", yeux: "fermes",   bouche: "sourire", joues: true,  extra: "" },
+  { nom: "Sérieux",   coul: "#8fa3bf", yeux: "ouverts",  bouche: "plat",    joues: false, extra: "lunettes" },
+  { nom: "Pirate",    coul: "#d4a373", yeux: "malins",   bouche: "rire",    joues: false, extra: "chapeau" },
+  { nom: "Épuisé",    coul: "#a8b8c8", yeux: "endormis", bouche: "plat",    joues: false, extra: "larme" },
+  { nom: "Fier",      coul: "#9ee493", yeux: "fermes",   bouche: "rire",    joues: true,  extra: "" },
+  { nom: "Complice",  coul: "#ffab91", yeux: "malins",   bouche: "sourire", joues: true,  extra: "coeur_vole" },
 ];
 
+// ============================================================
+//  DESSIN
+// ============================================================
+function ombrir(hex, f) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.round(((n >> 16) & 255) * f);
+  const g = Math.round(((n >> 8) & 255) * f);
+  const b = Math.round((n & 255) * f);
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+function dessinerCreature(e) {
+  const c = e.coul;
+  const cFonce = ombrir(c, 0.82);
+  let s = "";
+
+  // --- accessoires arrière ---
+  if (e.extra === "halo") {
+    s += '<ellipse cx="60" cy="14" rx="22" ry="6" fill="none" stroke="#ffe066" stroke-width="3" opacity=".9"/>';
+  }
+  if (e.extra === "feu") {
+    s += '<path d="M28 26 q6 -14 12 -4 q4 -12 10 -2 q5 -10 10 0 q6 -8 8 4 q-16 8 -40 2z" fill="#ff9f43" opacity=".95"/>';
+  }
+  if (e.extra === "eclair") {
+    s += '<path d="M96 22 l-10 16 h7 l-6 14 14 -18 h-7z" fill="#ffe066"/>';
+  }
+
+  // --- corps ---
+  s += '<ellipse cx="60" cy="80" rx="42" ry="38" fill="' + c + '"/>';
+  s += '<ellipse cx="46" cy="62" rx="14" ry="10" fill="#ffffff" opacity=".28"/>';
+
+  // --- oreilles ---
+  s += '<ellipse cx="30" cy="46" rx="12" ry="15" fill="' + c + '" transform="rotate(-18 30 46)"/>';
+  s += '<ellipse cx="30" cy="47" rx="6" ry="8" fill="' + cFonce + '" transform="rotate(-18 30 47)"/>';
+  s += '<ellipse cx="90" cy="46" rx="12" ry="15" fill="' + c + '" transform="rotate(18 90 46)"/>';
+  s += '<ellipse cx="90" cy="47" rx="6" ry="8" fill="' + cFonce + '" transform="rotate(18 90 47)"/>';
+
+  // --- joues ---
+  if (e.joues) {
+    s += '<ellipse cx="34" cy="88" rx="9" ry="6" fill="#ff8fab" opacity=".55"/>';
+    s += '<ellipse cx="86" cy="88" rx="9" ry="6" fill="#ff8fab" opacity=".55"/>';
+  }
+
+  // --- yeux ---
+  const xg = 45, xd = 75, yg = 74, yd = 74;
+  if (e.yeux === "ouverts") {
+    s += '<ellipse cx="' + xg + '" cy="' + yg + '" rx="7" ry="9" fill="#1a1a1a"/>';
+    s += '<ellipse cx="' + xd + '" cy="' + yd + '" rx="7" ry="9" fill="#1a1a1a"/>';
+    s += '<circle cx="' + (xg+2) + '" cy="' + (yg-3) + '" r="2.6" fill="#fff"/>';
+    s += '<circle cx="' + (xd+2) + '" cy="' + (yd-3) + '" r="2.6" fill="#fff"/>';
+  } else if (e.yeux === "etonnes") {
+    s += '<circle cx="' + xg + '" cy="' + yg + '" r="9" fill="#fff"/>';
+    s += '<circle cx="' + xd + '" cy="' + yd + '" r="9" fill="#fff"/>';
+    s += '<circle cx="' + xg + '" cy="' + yg + '" r="4.5" fill="#1a1a1a"/>';
+    s += '<circle cx="' + xd + '" cy="' + yd + '" r="4.5" fill="#1a1a1a"/>';
+  } else if (e.yeux === "fermes") {
+    s += '<path d="M' + (xg-8) + ' ' + yg + ' q8 7 16 0" stroke="#1a1a1a" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M' + (xd-8) + ' ' + yd + ' q8 7 16 0" stroke="#1a1a1a" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+  } else if (e.yeux === "endormis") {
+    s += '<path d="M' + (xg-8) + ' ' + (yg+2) + ' q8 -6 16 0" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M' + (xd-8) + ' ' + (yd+2) + ' q8 -6 16 0" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  } else if (e.yeux === "malins") {
+    s += '<path d="M' + (xg-9) + ' ' + (yg+2) + ' q9 -9 18 0" stroke="#1a1a1a" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M' + (xd-9) + ' ' + (yd+2) + ' q9 -9 18 0" stroke="#1a1a1a" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+    s += '<circle cx="' + xg + '" cy="' + (yg+5) + '" r="3" fill="#1a1a1a"/>';
+    s += '<circle cx="' + xd + '" cy="' + (yd+5) + '" r="3" fill="#1a1a1a"/>';
+  } else if (e.yeux === "tristes") {
+    s += '<circle cx="' + xg + '" cy="' + yg + '" r="6.5" fill="#1a1a1a"/>';
+    s += '<circle cx="' + xd + '" cy="' + yd + '" r="6.5" fill="#1a1a1a"/>';
+    s += '<path d="M' + (xg-9) + ' ' + (yg-11) + ' q9 3 15 8" stroke="#1a1a1a" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M' + (xd+9) + ' ' + (yd-11) + ' q-9 3 -15 8" stroke="#1a1a1a" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+  } else if (e.yeux === "coeurs") {
+    s += '<path d="M' + xg + ' ' + (yg+4) + ' c-6 -6 -12 -1 -6 5 l6 6 6 -6 c6 -6 0 -11 -6 -5z" fill="#ff4d6d"/>';
+    s += '<path d="M' + xd + ' ' + (yd+4) + ' c-6 -6 -12 -1 -6 5 l6 6 6 -6 c6 -6 0 -11 -6 -5z" fill="#ff4d6d"/>';
+  } else if (e.yeux === "etoiles") {
+    s += '<path d="M' + xg + ' ' + (yg-8) + ' l2.5 6 6 .5 -4.5 4 1.5 6 -5.5 -3.5 -5.5 3.5 1.5 -6 -4.5 -4 6 -.5z" fill="#ffe066"/>';
+    s += '<path d="M' + xd + ' ' + (yd-8) + ' l2.5 6 6 .5 -4.5 4 1.5 6 -5.5 -3.5 -5.5 3.5 1.5 -6 -4.5 -4 6 -.5z" fill="#ffe066"/>';
+  } else if (e.yeux === "croix") {
+    s += '<path d="M' + (xg-6) + ' ' + (yg-6) + ' l12 12 M' + (xg+6) + ' ' + (yg-6) + ' l-12 12" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>';
+    s += '<path d="M' + (xd-6) + ' ' + (yd-6) + ' l12 12 M' + (xd+6) + ' ' + (yd-6) + ' l-12 12" stroke="#1a1a1a" stroke-width="3.2" stroke-linecap="round"/>';
+  } else if (e.yeux === "dollars") {
+    s += '<text x="' + xg + '" y="' + (yg+7) + '" font-size="18" font-weight="bold" fill="#2e7d32" text-anchor="middle">$</text>';
+    s += '<text x="' + xd + '" y="' + (yd+7) + '" font-size="18" font-weight="bold" fill="#2e7d32" text-anchor="middle">$</text>';
+  }
+
+  // --- bouche ---
+  const yb = 96;
+  if (e.bouche === "sourire") {
+    s += '<path d="M50 ' + yb + ' q10 9 20 0" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  } else if (e.bouche === "rire") {
+    s += '<path d="M46 ' + (yb-2) + ' q14 14 28 0z" fill="#8b2c3a"/>';
+    s += '<path d="M46 ' + (yb-2) + ' q14 5 28 0z" fill="#fff"/>';
+  } else if (e.bouche === "o") {
+    s += '<ellipse cx="60" cy="' + (yb+3) + '" rx="6" ry="7" fill="#8b2c3a"/>';
+  } else if (e.bouche === "dents") {
+    s += '<path d="M46 ' + (yb-2) + ' q14 12 28 0z" fill="#8b2c3a"/>';
+    s += '<rect x="52" y="' + (yb-2) + '" width="6" height="6" fill="#fff"/>';
+    s += '<rect x="62" y="' + (yb-2) + '" width="6" height="6" fill="#fff"/>';
+  } else if (e.bouche === "langue") {
+    s += '<path d="M50 ' + yb + ' q10 8 20 0" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    s += '<ellipse cx="60" cy="' + (yb+7) + '" rx="7" ry="5" fill="#ff7a8a"/>';
+  } else if (e.bouche === "plat") {
+    s += '<path d="M50 ' + (yb+2) + ' h20" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/>';
+  } else if (e.bouche === "fronce") {
+    s += '<path d="M50 ' + (yb+5) + ' q10 -8 20 0" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  } else if (e.bouche === "moue") {
+    s += '<path d="M52 ' + (yb+4) + ' q8 -6 16 0" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  }
+
+  // --- accessoires avant ---
+  if (e.extra === "chapeau") {
+    s += '<ellipse cx="60" cy="44" rx="30" ry="6" fill="#2b3a55"/>';
+    s += '<rect x="44" y="18" width="32" height="26" rx="4" fill="#3b4d6b"/>';
+    s += '<rect x="44" y="34" width="32" height="6" fill="#ff6b35"/>';
+  }
+  if (e.extra === "lunettes") {
+    s += '<circle cx="' + xg + '" cy="' + yg + '" r="11" fill="none" stroke="#2b3a55" stroke-width="3"/>';
+    s += '<circle cx="' + xd + '" cy="' + yd + '" r="11" fill="none" stroke="#2b3a55" stroke-width="3"/>';
+    s += '<path d="M' + (xg+11) + ' ' + yg + ' h' + (xd-xg-22) + '" stroke="#2b3a55" stroke-width="3"/>';
+  }
+  if (e.extra === "couronne") {
+    s += '<path d="M34 30 l8 14 8 -12 10 12 8 -12 8 12 8 -14 -6 26 h-38z" fill="#ffd700" stroke="#e6a700" stroke-width="1.5"/>';
+    s += '<circle cx="60" cy="34" r="3" fill="#ff4d6d"/>';
+  }
+  if (e.extra === "larme") {
+    s += '<path d="M32 88 q4 10 0 14 q-5 -4 0 -14z" fill="#58a6ff"/>';
+  }
+  if (e.extra === "sucre") {
+    s += '<rect x="84" y="20" width="22" height="7" rx="3" fill="#f5f5dc" transform="rotate(-20 95 24)"/>';
+    s += '<rect x="84" y="20" width="22" height="7" rx="3" fill="none" stroke="#c9b8a0" stroke-width="1" transform="rotate(-20 95 24)"/>';
+  }
+  if (e.extra === "coeur_vole") {
+    s += '<path d="M92 30 c-5 -5 -10 -1 -5 4 l5 5 5 -5 c5 -5 0 -9 -5 -4z" fill="#ff4d6d" opacity=".9"/>';
+    s += '<path d="M28 24 c-4 -4 -8 -1 -4 3 l4 4 4 -4 c4 -4 0 -7 -4 -3z" fill="#ff4d6d" opacity=".6"/>';
+  }
+
+  return s;
+}
+
+// ============================================================
+//  INTERACTION
+// ============================================================
 const boite    = document.getElementById('boite');
-const contenu  = document.getElementById('contenu');
+const creature = document.getElementById('creature');
 const hint     = document.getElementById('hint');
 const nbEl     = document.getElementById('nb');
 
 let ouverte = false;
 let compteur = 0;
+let derniere = -1;
 
 function tirer() {
-  return SURPRISES[Math.floor(Math.random() * SURPRISES.length)];
+  let i;
+  do { i = Math.floor(Math.random() * EXPRESSIONS.length); }
+  while (i === derniere && EXPRESSIONS.length > 1);
+  derniere = i;
+  return EXPRESSIONS[i];
 }
 
 function ouvrir() {
   if (ouverte) {
-    // refermer
-    boite.classList.remove('ouverte');
+    boite.classList.remove('ouverte', 'flotte');
     ouverte = false;
     hint.textContent = "Clique pour rouvrir";
+    hint.classList.remove('actif');
     return;
   }
 
-  const s = tirer();
-  contenu.textContent = s.t;
-  contenu.style.color = s.c;
+  const e = tirer();
+  creature.innerHTML = dessinerCreature(e);
 
   boite.classList.add('secoue');
   setTimeout(() => {
     boite.classList.remove('secoue');
     boite.classList.add('ouverte');
+    setTimeout(() => boite.classList.add('flotte'), 520);
   }, 320);
 
   ouverte = true;
   compteur++;
   nbEl.textContent = compteur;
-  hint.textContent = s.s;
+  hint.textContent = e.nom;
+  hint.classList.add('actif');
 }
 
 boite.addEventListener('click', ouvrir);
-boite.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ouvrir(); }
+boite.addEventListener('keydown', ev => {
+  if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); ouvrir(); }
 });
+
+// Pré-rendre la première expression (le SVG existe même caché)
+creature.innerHTML = dessinerCreature(EXPRESSIONS[0]);
 
 // ---- Emplacements publicitaires ----
 // Remplacer le contenu de #pub-haut / #pub-bas par le code de la régie
 // (AdSense, affiliation, etc.) une fois le site en ligne.
-// Le CSS est déjà dimensionné aux formats standards (728x90, 320x100).
 </script>
 </body>
 </html>
