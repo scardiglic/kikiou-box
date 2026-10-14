@@ -86,41 +86,6 @@
   .hint.actif { color: #ff9f43; }
   .hint.vide { visibility: hidden; }
 
-  /* Étiquette du nom — s'affiche sur la boîte, au-dessus du couvercle */
-  .etiquette {
-    position: absolute;
-    left: 50%; top: -18%;
-    transform: translate(-50%, -100%) scale(.8);
-    padding: 7px 16px;
-    border-radius: 999px;
-    background: rgba(13, 17, 23, .92);
-    border: 2px solid #ff9f43;
-    color: #ff9f43;
-    font-size: clamp(.75rem, 3.2vw, .95rem);
-    font-weight: 700;
-    letter-spacing: .3px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s, transform .35s cubic-bezier(.2,-0.3,.3,1.5);
-    z-index: 5;
-    box-shadow: 0 4px 16px rgba(0,0,0,.5);
-  }
-  .boite.ouverte .etiquette {
-    opacity: 1;
-    transform: translate(-50%, -100%) scale(1);
-  }
-  /* petite flèche sous l'étiquette */
-  .etiquette::after {
-    content: "";
-    position: absolute;
-    left: 50%; bottom: -7px;
-    transform: translateX(-50%);
-    width: 0; height: 0;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-top: 7px solid #ff9f43;
-  }
   .compteur { margin-top: 18px; font-size: .78rem; color: #484f58; }
   .compteur b { color: #ff9f43; }
 
@@ -178,7 +143,6 @@
       <text x="100" y="135" text-anchor="middle" font-size="42" font-weight="bold"
             fill="#ffffff" opacity=".85" font-family="system-ui, sans-serif">?</text>
     </svg>
-    <div class="etiquette" id="etiquette"></div>
   </div>
 </div>
 
@@ -416,7 +380,6 @@ const boite = document.getElementById('boite');
 const chat  = document.getElementById('chat');
 const hint  = document.getElementById('hint');
 const nbEl  = document.getElementById('nb');
-const etiq  = document.getElementById('etiquette');
 
 let ouverte = false;
 let compteur = 0;
@@ -436,13 +399,11 @@ function ouvrir() {
     ouverte = false;
     hint.textContent = "Clique pour rouvrir";
     hint.classList.remove('vide');
-    etiq.textContent = "";
     return;
   }
 
   const e = tirer();
   chat.innerHTML = dessinerChat(e);
-  etiq.textContent = e.nom;
 
   boite.classList.add('secoue');
   setTimeout(() => {
