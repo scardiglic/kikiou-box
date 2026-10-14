@@ -53,11 +53,12 @@
 
   .couvercle {
     position: absolute; top: 0; left: 0; width: 100%;
-    transform-origin: 50% 100%;
+    /* Charnière à gauche : le couvercle pivote depuis le bord gauche */
+    transform-origin: 0% 100%;
     transition: transform .38s cubic-bezier(.3,-0.4,.4,1.6);
     z-index: 3;
   }
-  .boite.ouverte .couvercle { transform: rotate(-112deg) translateY(-8%); }
+  .boite.ouverte .couvercle { transform: rotate(-112deg) translateY(-4%); }
 
   .chat {
     position: absolute; left: 50%; bottom: 34%;
