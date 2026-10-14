@@ -84,11 +84,12 @@
     min-height: 1.2em; transition: color .3s; font-weight: 600;
   }
   .hint.actif { color: #ff9f43; }
+  .hint.vide { visibility: hidden; }
 
   /* Étiquette du nom — s'affiche sur la boîte, au-dessus du couvercle */
   .etiquette {
     position: absolute;
-    left: 50%; top: -6%;
+    left: 50%; top: -18%;
     transform: translate(-50%, -100%) scale(.8);
     padding: 7px 16px;
     border-radius: 999px;
@@ -434,7 +435,7 @@ function ouvrir() {
     boite.classList.remove('ouverte', 'flotte');
     ouverte = false;
     hint.textContent = "Clique pour rouvrir";
-    hint.classList.remove('actif');
+    hint.classList.remove('vide');
     etiq.textContent = "";
     return;
   }
@@ -454,7 +455,7 @@ function ouvrir() {
   compteur++;
   nbEl.textContent = compteur;
   hint.textContent = "";
-  hint.classList.remove('actif');
+  hint.classList.add('vide');
 }
 
 boite.addEventListener('click', ouvrir);
