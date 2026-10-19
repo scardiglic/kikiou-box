@@ -413,6 +413,7 @@ const nbEl  = document.getElementById('nb');
 let ouverte = false;
 let compteur = 0;
 let derniere = -1;
+let minuteurFermeture = null;
 
 function tirer() {
   let i;
@@ -422,12 +423,17 @@ function tirer() {
   return EXPRESSIONS[i];
 }
 
+function fermer() {
+  boite.classList.remove('ouverte', 'flotte');
+  ouverte = false;
+  hint.textContent = "Clique pour rouvrir";
+  hint.classList.remove('vide');
+}
+
 function ouvrir() {
   if (ouverte) {
-    boite.classList.remove('ouverte', 'flotte');
-    ouverte = false;
-    hint.textContent = "Clique pour rouvrir";
-    hint.classList.remove('vide');
+    clearTimeout(minuteurFermeture);
+    fermer();
     return;
   }
 
@@ -446,6 +452,10 @@ function ouvrir() {
   nbEl.textContent = compteur;
   hint.textContent = "";
   hint.classList.add('vide');
+
+  // Refermeture automatique 2 secondes apres l'ouverture
+  clearTimeout(minuteurFermeture);
+  minuteurFermeture = setTimeout(fermer, 2000 + 320);
 }
 
 boite.addEventListener('click', ouvrir);
