@@ -38,8 +38,7 @@
     text-align: center; margin-bottom: 28px;
   }
 
-  .scene { position: relative; display: flex; align-items: center; justify-content: center;
-           margin-top: 46px; }
+  .scene { position: relative; display: flex; align-items: center; justify-content: center; }
 
   .boite {
     width: clamp(170px, 44vw, 240px);
@@ -79,14 +78,14 @@
   }
   .boite.ouverte .chat {
     opacity: 1;
-    transform: translate(-50%, -85%) scale(1) rotate(0deg);
+    transform: translate(-50%, -110%) scale(1) rotate(0deg);
   }
   .boite.ouverte .chat.flotte {
     animation: flotte 2.4s ease-in-out infinite;
   }
   @keyframes flotte {
-    0%,100% { transform: translate(-50%, -85%) scale(1) rotate(-2deg); }
-    50%     { transform: translate(-50%, -95%) scale(1) rotate(2deg); }
+    0%,100% { transform: translate(-50%, -110%) scale(1) rotate(-2deg); }
+    50%     { transform: translate(-50%, -120%) scale(1) rotate(2deg); }
   }
 
   .hint {
@@ -112,10 +111,9 @@
 
   footer { position: fixed; bottom: 4px; right: 10px; font-size: .65rem; color: #21262d; }
 
-  /* Navigation entre les pages — en haut, hors de la zone du chat */
+  /* Navigation entre les pages — placee sous le compteur, dans le flux normal */
   .topnav { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
-            padding: 14px 20px 0; width: 100%;
-            position: absolute; top: 0; left: 0; z-index: 20; }
+            padding: 0; margin-top: 34px; position: relative; z-index: 10; }
   .topnav a { color: #7d8590; text-decoration: none; font-size: .84rem;
               font-weight: 600; transition: .2s; }
   .topnav a:hover, .topnav a.actif { color: #ff9f43; }
@@ -124,12 +122,6 @@
 </style>
 </head>
 <body>
-<nav class="topnav">
-  <a href="/" class="actif">Le jeu</a>
-  <a href="/chats.html">Les 25 chats</a>
-  <a href="/apropos.html">À propos</a>
-  <a href="/contact.html">Contact</a>
-</nav>
 
 <div class="pub haut" id="pub-haut">Emplacement publicitaire</div>
 
@@ -170,6 +162,13 @@
 
 <p class="hint" id="hint">Clique pour ouvrir</p>
 <p class="compteur">Boîtes ouvertes : <b id="nb">0</b></p>
+
+<nav class="topnav">
+  <a href="/" class="actif">Le jeu</a>
+  <a href="/chats.html">Les 25 chats</a>
+  <a href="/apropos.html">À propos</a>
+  <a href="/contact.html">Contact</a>
+</nav>
 
 <div class="pub bas" id="pub-bas">Emplacement publicitaire</div>
 <footer>
