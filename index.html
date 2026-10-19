@@ -111,10 +111,23 @@
 
   footer { position: fixed; bottom: 4px; right: 10px; font-size: .65rem; color: #21262d; }
 
+  /* Navigation entre les pages */
+  .topnav { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+            padding: 14px 20px 0; position: relative; z-index: 10; }
+  .topnav a { color: #7d8590; text-decoration: none; font-size: .84rem;
+              font-weight: 600; transition: .2s; }
+  .topnav a:hover, .topnav a.actif { color: #ff9f43; }
+
   @media (max-height: 660px) { .pub { display: none; } }
 </style>
 </head>
 <body>
+<nav class="topnav">
+  <a href="/" class="actif">Le jeu</a>
+  <a href="/chats.html">Les 25 chats</a>
+  <a href="/apropos.html">À propos</a>
+  <a href="/contact.html">Contact</a>
+</nav>
 
 <div class="pub haut" id="pub-haut">Emplacement publicitaire</div>
 
@@ -157,7 +170,15 @@
 <p class="compteur">Boîtes ouvertes : <b id="nb">0</b></p>
 
 <div class="pub bas" id="pub-bas">Emplacement publicitaire</div>
-<footer>Kikiou-Box — v3 chat kawaii</footer>
+<footer>
+  <a href="/" style="color:#484f58;text-decoration:none;margin:0 8px;">Le jeu</a>
+  <a href="/chats.html" style="color:#484f58;text-decoration:none;margin:0 8px;">Les 25 chats</a>
+  <a href="/apropos.html" style="color:#484f58;text-decoration:none;margin:0 8px;">À propos</a>
+  <a href="/contact.html" style="color:#484f58;text-decoration:none;margin:0 8px;">Contact</a>
+  <a href="/mentions-legales.html" style="color:#484f58;text-decoration:none;margin:0 8px;">Mentions légales</a>
+  <a href="/confidentialite.html" style="color:#484f58;text-decoration:none;margin:0 8px;">Confidentialité</a>
+  <span style="color:#21262d;margin:0 8px;">Kikiou-Box v3</span>
+</footer>
 
 <script>
 // ============================================================

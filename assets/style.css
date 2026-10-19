@@ -1,0 +1,42 @@
+:root{
+  --bg:#0a0d14; --card:#12161f; --bord:#1f2532; --txt:#e6edf3;
+  --mut:#7d8590; --acc:#ff9f43; --acc2:#ffd0a3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg); color:var(--txt); min-height:100vh; line-height:1.7;
+}
+header{
+  border-bottom:1px solid var(--bord); padding:16px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:12px; position:sticky; top:0;
+  background:rgba(10,13,20,.95); backdrop-filter:blur(8px); z-index:10;
+}
+.logo{font-weight:800; font-size:1.1rem; color:var(--acc); text-decoration:none}
+nav{display:flex; gap:20px; flex-wrap:wrap}
+nav a{color:var(--mut); text-decoration:none; font-size:.9rem; transition:.2s}
+nav a:hover,nav a.actif{color:var(--acc)}
+main{max-width:860px; margin:0 auto; padding:44px 22px 80px}
+h1{font-size:1.9rem; margin-bottom:10px; letter-spacing:-.5px}
+h2{font-size:1.25rem; margin:34px 0 12px; color:var(--acc2)}
+h3{font-size:1rem; margin:22px 0 8px}
+p{margin-bottom:14px; color:#c9d1d9}
+.intro{color:var(--mut); font-size:1.02rem; margin-bottom:30px}
+a{color:var(--acc)}
+ul{margin:0 0 16px 22px}
+li{margin-bottom:7px; color:#c9d1d9}
+.card{background:var(--card); border:1px solid var(--bord); border-radius:12px; padding:20px; margin-bottom:18px}
+.grille{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; margin-top:18px}
+.chat{background:var(--card); border:1px solid var(--bord); border-radius:12px; padding:16px; transition:.2s}
+.chat:hover{border-color:var(--acc); transform:translateY(-2px)}
+.chat h3{color:var(--acc); margin:0 0 6px; font-size:.98rem}
+.chat p{font-size:.84rem; color:var(--mut); margin:0}
+.btn{display:inline-block; background:var(--acc); color:#0a0d14; font-weight:700;
+     padding:11px 22px; border-radius:8px; text-decoration:none; margin-top:10px; transition:.2s}
+.btn:hover{background:var(--acc2)}
+footer{border-top:1px solid var(--bord); padding:26px 22px; text-align:center;
+       color:var(--mut); font-size:.82rem}
+footer a{color:var(--mut); margin:0 10px}
+.pub{background:var(--card); border:1px dashed var(--bord); border-radius:10px;
+     padding:22px; text-align:center; color:#484f58; font-size:.78rem; margin:26px 0}
