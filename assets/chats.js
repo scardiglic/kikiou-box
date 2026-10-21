@@ -8,7 +8,7 @@ const EXPRESSIONS = [
   // --- Les classiques revisites ---
   { nom: "Citrouille",   robe: "#ff8c42", yeux: "heureux",     bouche: "sourire", extra: "citrouille" },
   { nom: "Fantôme",      robe: "#e8e8f0", yeux: "fermes",      bouche: "o",       extra: "halo" },
-  { nom: "Vampire",      robe: "#2a2438", yeux: "faches",      bouche: "crocs",   extra: "cape" },
+  { nom: "Vampire",      robe: "#2a2438", yeux: "faches",      bouche: "crocs",   extra: "" },
   { nom: "Sorcière",     robe: "#6b4fa0", yeux: "ouverts",     bouche: "sourire", extra: "chapeausorciere" },
   { nom: "Momie",        robe: "#ddd6c4", yeux: "ouverts",     bouche: "plat",    extra: "bandelettes" },
   { nom: "Zombie",       robe: "#7a9e6b", yeux: "tristes",     bouche: "crocs",   extra: "" },
@@ -241,16 +241,6 @@ function dessinerChat(e) {
     s += '<path d="M44 20 q26 8 52 0" stroke="#ffd166" stroke-width="4" fill="none"/>';
     s += '<circle cx="70" cy="-14" r="4" fill="#ffd166"/>';
     s += '<path d="M78 6 l4 4 -4 4 -4 -4z" fill="#ffd166" opacity=".8"/>';
-  }
-  if (e.extra === "cape") {
-    // Cape entierement SOUS le menton (le visage finit vers y=100).
-    // Deux pans lateraux + un col bas, aucun contact avec la figure.
-    s += '<path d="M22 108 q-12 22 -6 38 h30 q-6 -24 -4 -38z" fill="#1a0f1f" opacity=".92"/>';
-    s += '<path d="M118 108 q12 22 6 38 h-30 q6 -24 4 -38z" fill="#1a0f1f" opacity=".92"/>';
-    // Col pose sur les epaules, sous le menton
-    s += '<path d="M46 106 q24 -6 48 0 l5 12 q-29 -8 -58 0z" fill="#2b1a2e"/>';
-    // Lisere rouge du col
-    s += '<path d="M48 109 q22 -5 44 0" stroke="#8b0f0f" stroke-width="2.2" fill="none" opacity=".85"/>';
   }
   if (e.extra === "bandelettes") {
     s += '<path d="M32 40 q38 -10 76 0" stroke="#f0ece0" stroke-width="7" fill="none" opacity=".95"/>';
