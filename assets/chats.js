@@ -1,34 +1,45 @@
 // ============================================================
-//  Kikiou-Box — personnages et dessin des chats
+//  Kikiou-Box — Edition Halloween
+//  25 chats sur le theme d'Halloween
 //  Fichier partage entre la page de jeu et la galerie.
 // ============================================================
 
 const EXPRESSIONS = [
-  { nom: "Curieux",   robe: "#fff4e6", yeux: "ouverts",     bouche: "w",       extra: "" },
-  { nom: "Content",   robe: "#ffe8d6", yeux: "heureux",     bouche: "sourire", extra: "" },
-  { nom: "Endormi",   robe: "#e8e4f0", yeux: "fermes",      bouche: "ron",     extra: "zzz" },
-  { nom: "Amoureux",  robe: "#ffe0ec", yeux: "coeurs",      bouche: "w",       extra: "coeurs" },
-  { nom: "Fâché",     robe: "#f5d0c5", yeux: "faches",      bouche: "fronce",  extra: "fumee" },
-  { nom: "Satisfait", robe: "#d9f0e0", yeux: "heureux",     bouche: "sourire", extra: "" },
-  { nom: "Triste",    robe: "#d6e4ff", yeux: "tristes",     bouche: "moue",    extra: "larme" },
-  { nom: "Roi",       robe: "#fff0c2", yeux: "ouverts",     bouche: "sourire", extra: "couronne" },
-  { nom: "Savant",    robe: "#e4dcff", yeux: "ouverts",     bouche: "plat",    extra: "lunettes" },
-  { nom: "Riche",     robe: "#d4f5dc", yeux: "dollars",     bouche: "sourire", extra: "" },
-  { nom: "Effrayé",   robe: "#efe0ff", yeux: "ecarquilles", bouche: "o",       extra: "" },
-  { nom: "Noir",      robe: "#3a3a4a", yeux: "ouverts",     bouche: "w",       extra: "" },
-  { nom: "Étoilé",    robe: "#fff6cc", yeux: "etoiles",     bouche: "o",       extra: "" },
-  { nom: "Fantôme",   robe: "#dcdce4", yeux: "fermes",      bouche: "plat",    extra: "halo" },
-  { nom: "Furieux",   robe: "#ffd0c5", yeux: "faches",      bouche: "crocs",   extra: "fumee" },
-  { nom: "Zen",       robe: "#d0f0ee", yeux: "fermes",      bouche: "sourire", extra: "" },
-  { nom: "Gourmand",  robe: "#ffe0c2", yeux: "heureux",     bouche: "langue",  extra: "poisson" },
-  { nom: "Boudeur",   robe: "#d8d8e0", yeux: "tristes",     bouche: "moue",    extra: "" },
-  { nom: "Excité",    robe: "#fff0a8", yeux: "etoiles",     bouche: "sourire", extra: "eclair" },
-  { nom: "Timide",    robe: "#ffd9e8", yeux: "fermes",      bouche: "w",       extra: "rougeur" },
-  { nom: "Sérieux",   robe: "#c8d4e0", yeux: "ouverts",     bouche: "plat",    extra: "lunettes" },
-  { nom: "Pirate",    robe: "#e0c8a8", yeux: "faches",      bouche: "crocs",   extra: "bandeau" },
-  { nom: "Fatigué",   robe: "#d4dce4", yeux: "fermes",      bouche: "plat",    extra: "larme" },
-  { nom: "Fier",      robe: "#d4f0d8", yeux: "heureux",     bouche: "sourire", extra: "" },
-  { nom: "Chapeau",   robe: "#ffe0d0", yeux: "ouverts",     bouche: "w",       extra: "chapeau" },
+  // --- Les classiques revisites ---
+  { nom: "Citrouille",   robe: "#ff8c42", yeux: "heureux",     bouche: "sourire", extra: "citrouille" },
+  { nom: "Fantôme",      robe: "#e8e8f0", yeux: "fermes",      bouche: "o",       extra: "halo" },
+  { nom: "Vampire",      robe: "#2a2438", yeux: "faches",      bouche: "crocs",   extra: "cape" },
+  { nom: "Sorcière",     robe: "#6b4fa0", yeux: "ouverts",     bouche: "sourire", extra: "chapeausorciere" },
+  { nom: "Momie",        robe: "#ddd6c4", yeux: "ouverts",     bouche: "plat",    extra: "bandelettes" },
+  { nom: "Zombie",       robe: "#7a9e6b", yeux: "tristes",     bouche: "crocs",   extra: "" },
+  { nom: "Squelette",    robe: "#f0f0e8", yeux: "ouverts",     bouche: "crocs",   extra: "os" },
+  { nom: "Démon",        robe: "#c0392b", yeux: "faches",      bouche: "crocs",   extra: "cornes" },
+
+  // --- Les créatures ---
+  { nom: "Chauve-souris", robe: "#3d3450", yeux: "ouverts",    bouche: "w",       extra: "ailes" },
+  { nom: "Araignée",     robe: "#2b2b38", yeux: "ecarquilles", bouche: "fronce",  extra: "toile" },
+  { nom: "Chat noir",    robe: "#1a1a24", yeux: "ouverts",     bouche: "w",       extra: "luneverte" },
+  { nom: "Loup-garou",   robe: "#6b5a48", yeux: "faches",      bouche: "crocs",   extra: "poils" },
+  { nom: "Serpent",      robe: "#4a7c59", yeux: "ouverts",     bouche: "langue",  extra: "" },
+  { nom: "Corbeau",      robe: "#25252e", yeux: "ouverts",     bouche: "plat",    extra: "ailes" },
+
+  // --- Les esprits ---
+  { nom: "Spectre",      robe: "#b8d4e8", yeux: "fermes",      bouche: "ron",     extra: "halo" },
+  { nom: "Âme errante",  robe: "#c8c8dc", yeux: "ouverts",     bouche: "o",       extra: "fumee" },
+  { nom: "Ombre",        robe: "#1a1520", yeux: "etoiles",     bouche: "plat",    extra: "fumee" },
+  { nom: "Poltergeist",  robe: "#d8d0e8", yeux: "faches",      bouche: "crocs",   extra: "eclair" },
+
+  // --- Les sucreries ---
+  { nom: "Bonbon",       robe: "#ff6b9d", yeux: "heureux",     bouche: "sourire", extra: "coeurs" },
+  { nom: "Gâteau",       robe: "#f5deb3", yeux: "heureux",     bouche: "langue",  extra: "bougie" },
+  { nom: "Chocolat",     robe: "#5c3a21", yeux: "heureux",     bouche: "sourire", extra: "" },
+
+  // --- Les ambiances ---
+  { nom: "Potiron",      robe: "#e8912a", yeux: "fermes",      bouche: "sourire", extra: "citrouille" },
+  { nom: "Brouillard",   robe: "#9aa5b1", yeux: "fermes",      bouche: "plat",    extra: "fumee" },
+  { nom: "Chandelle",    robe: "#fff3d4", yeux: "heureux",     bouche: "o",       extra: "bougie" },
+  { nom: "Cimetière",    robe: "#4a4a5a", yeux: "tristes",     bouche: "moue",    extra: "pierretombe" },
+  { nom: "Pleine lune",  robe: "#e8e4d0", yeux: "etoiles",     bouche: "sourire", extra: "luneverte" },
 ];
 
 function ombrir(hex, f) {
@@ -45,7 +56,6 @@ function estSombre(hex) {
   return (r * 0.299 + g * 0.587 + b * 0.114) < 128;
 }
 
-// viewBox 140 x 145
 function dessinerChat(e) {
   const robe = e.robe;
   const robeOmbre = ombrir(robe, 0.88);
@@ -216,6 +226,64 @@ function dessinerChat(e) {
   if (e.extra === "rougeur") {
     s += '<ellipse cx="33" cy="86" rx="14" ry="9" fill="#ff6b8a" opacity=".32"/>';
     s += '<ellipse cx="107" cy="86" rx="14" ry="9" fill="#ff6b8a" opacity=".32"/>';
+  }
+
+
+  // ===== Accessoires Halloween =====
+  if (e.extra === "citrouille") {
+    s += '<path d="M70 22 q-4 -12 0 -18 q4 6 0 18" stroke="#4a7c3a" stroke-width="4" fill="none" stroke-linecap="round"/>';
+    s += '<ellipse cx="56" cy="26" rx="20" ry="13" fill="#ff8c1a" opacity=".9"/>';
+    s += '<ellipse cx="84" cy="26" rx="20" ry="13" fill="#e87a12" opacity=".9"/>';
+    s += '<path d="M60 22 l6 -5 6 5 -6 5z" fill="#ffd166"/>';
+  }
+  if (e.extra === "chapeausorciere") {
+    s += '<path d="M70 -14 l-26 34 h52z" fill="#2d1b4e"/>';
+    s += '<path d="M44 20 q26 8 52 0" stroke="#ffd166" stroke-width="4" fill="none"/>';
+    s += '<circle cx="70" cy="-14" r="4" fill="#ffd166"/>';
+    s += '<path d="M78 6 l4 4 -4 4 -4 -4z" fill="#ffd166" opacity=".8"/>';
+  }
+  if (e.extra === "cape") {
+    s += '<path d="M18 74 q-8 40 6 52 h92 q14 -12 6 -52 q-22 -14 -52 -14 t-52 14z" fill="#1a0f1f" opacity=".85"/>';
+    s += '<path d="M52 62 l18 22 18 -22" stroke="#8b0f0f" stroke-width="3" fill="none"/>';
+  }
+  if (e.extra === "bandelettes") {
+    s += '<path d="M32 40 q38 -10 76 0" stroke="#f0ece0" stroke-width="7" fill="none" opacity=".95"/>';
+    s += '<path d="M30 62 q40 -8 80 0" stroke="#f0ece0" stroke-width="7" fill="none" opacity=".95"/>';
+    s += '<path d="M34 84 q36 -8 72 0" stroke="#f0ece0" stroke-width="6" fill="none" opacity=".95"/>';
+  }
+  if (e.extra === "os") {
+    s += '<path d="M26 100 l-8 6 M114 100 l8 6" stroke="#f0f0e8" stroke-width="6" stroke-linecap="round"/>';
+    s += '<circle cx="20" cy="108" r="5" fill="#f0f0e8"/>';
+    s += '<circle cx="120" cy="108" r="5" fill="#f0f0e8"/>';
+  }
+  if (e.extra === "cornes") {
+    s += '<path d="M44 24 q-10 -14 -4 -22 q10 6 10 18" fill="#8b0f0f"/>';
+    s += '<path d="M96 24 q10 -14 4 -22 q-10 6 -10 18" fill="#8b0f0f"/>';
+  }
+  if (e.extra === "ailes") {
+    s += '<path d="M30 70 q-26 -14 -28 6 q14 2 20 14 q6 -12 8 -20z" fill="#2a2438" opacity=".9"/>';
+    s += '<path d="M110 70 q26 -14 28 6 q-14 2 -20 14 q-6 -12 -8 -20z" fill="#2a2438" opacity=".9"/>';
+  }
+  if (e.extra === "toile") {
+    s += '<path d="M8 8 h124 M8 8 v40 M8 8 l50 30 M132 8 v40 M132 8 l-50 30" stroke="#b8b8c8" stroke-width="1.6" opacity=".7"/>';
+    s += '<path d="M8 30 q30 0 40 20 M132 30 q-30 0 -40 20" stroke="#b8b8c8" stroke-width="1.6" fill="none" opacity=".7"/>';
+    s += '<ellipse cx="126" cy="14" rx="5" ry="4" fill="#1a1a24"/>';
+  }
+  if (e.extra === "luneverte") {
+    s += '<circle cx="104" cy="34" r="16" fill="#c8f0a0" opacity=".35"/>';
+    s += '<circle cx="104" cy="34" r="16" fill="none" stroke="#7fd04a" stroke-width="1.6" opacity=".6"/>';
+  }
+  if (e.extra === "poils") {
+    s += '<path d="M40 20 l-4 -10 8 4 M70 14 l0 -12 4 10 M100 20 l4 -10 -8 4" stroke="#6b5a48" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  }
+  if (e.extra === "bougie") {
+    s += '<rect x="66" y="-8" width="8" height="18" rx="2" fill="#f5e6c8"/>';
+    s += '<ellipse cx="70" cy="-12" rx="4" ry="7" fill="#ffb347"/>';
+    s += '<ellipse cx="70" cy="-14" rx="2" ry="4" fill="#fff3d4"/>';
+  }
+  if (e.extra === "pierretombe") {
+    s += '<path d="M52 108 q-4 -26 18 -26 q22 0 18 26z" fill="#8a8a9a"/>';
+    s += '<path d="M62 92 h16 M66 100 h8" stroke="#5a5a6a" stroke-width="2.5" stroke-linecap="round"/>';
   }
 
   return s;

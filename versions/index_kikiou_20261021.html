@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kikiou-Box — clique et découvre ton chat</title>
+<meta name="description" content="Clique sur la boîte. Un petit chat kawaii en sort. Tu ne sais pas lequel.">
+<meta property="og:title" content="Kikiou-Box">
+<meta property="og:description" content="Clique sur la boîte. Un petit chat kawaii en sort.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0a0d14">
+
+<!-- Statistiques de consultation — GoatCounter (sans cookie, respecte la vie privée) -->
+<script data-goatcounter="https://kikiou-box.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: radial-gradient(circle at 50% 30%, #1b2233 0%, #0a0d14 70%);
+    color: #e6e6e6;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 20px;
+    overflow: hidden; user-select: none;
+  }
+
+  h1 {
+    font-size: clamp(1.4rem, 5vw, 2.2rem);
+    font-weight: 800; letter-spacing: -1px; text-align: center;
+    background: linear-gradient(90deg,#ff9f43,#ff6b35,#ff4d6d);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 6px;
+  }
+  .sub {
+    color: #6e7681; font-size: clamp(.78rem, 2.5vw, .92rem);
+    text-align: center; margin-bottom: 28px;
+  }
+
+  .scene { position: relative; display: flex; align-items: center; justify-content: center; }
+
+  .boite {
+    width: clamp(170px, 44vw, 240px);
+    height: clamp(170px, 44vw, 240px);
+    position: relative; cursor: pointer;
+    transition: transform .12s ease;
+    filter: drop-shadow(0 18px 32px rgba(0,0,0,.6));
+  }
+  .boite:hover { transform: translateY(-6px) scale(1.03); }
+  .boite:active { transform: translateY(2px) scale(.97); }
+  .boite.secoue { animation: secousse .5s ease; }
+  @keyframes secousse {
+    0%,100% { transform: translateX(0) rotate(0); }
+    15% { transform: translateX(-10px) rotate(-3deg); }
+    30% { transform: translateX(9px) rotate(3deg); }
+    45% { transform: translateX(-7px) rotate(-2deg); }
+    60% { transform: translateX(6px) rotate(2deg); }
+    80% { transform: translateX(-3px) rotate(-1deg); }
+  }
+
+  .couvercle {
+    position: absolute; top: 0; left: 0; width: 100%;
+    /* Charnière à gauche : le couvercle pivote depuis le bord gauche */
+    transform-origin: 0% 100%;
+    transition: transform .38s cubic-bezier(.3,-0.4,.4,1.6);
+    z-index: 3;
+  }
+  .boite.ouverte .couvercle { transform: rotate(-112deg) translateY(-4%); }
+
+  .chat {
+    position: absolute; left: 50%; bottom: 34%;
+    width: 54%; height: auto;
+    transform: translate(-50%, 12%) scale(.2) rotate(-8deg);
+    opacity: 0; pointer-events: none;
+    transition: transform .5s cubic-bezier(.2,-0.3,.3,1.5), opacity .25s;
+    z-index: 2;
+  }
+  .boite.ouverte .chat {
+    opacity: 1;
+    transform: translate(-50%, -110%) scale(1) rotate(0deg);
+  }
+  .boite.ouverte .chat.flotte {
+    animation: flotte 2.4s ease-in-out infinite;
+  }
+  @keyframes flotte {
+    0%,100% { transform: translate(-50%, -110%) scale(1) rotate(-2deg); }
+    50%     { transform: translate(-50%, -120%) scale(1) rotate(2deg); }
+  }
+
+  .hint {
+    margin-top: 34px; color: #484f58; font-size: .82rem; text-align: center;
+    min-height: 1.2em; transition: color .3s; font-weight: 600;
+  }
+  .hint.actif { color: #ff9f43; }
+  .hint.vide { visibility: hidden; }
+
+  .compteur { margin-top: 18px; font-size: .78rem; color: #484f58; }
+  .compteur b { color: #ff9f43; }
+
+  .pub {
+    position: fixed; left: 50%; transform: translateX(-50%);
+    width: min(92vw, 728px); min-height: 90px;
+    border: 1px dashed #21262d; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: #30363d; font-size: .72rem; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .pub.haut { top: 12px; }
+  .pub.bas { bottom: 12px; }
+
+  footer { position: fixed; bottom: 4px; right: 10px; font-size: .65rem; color: #21262d; }
+
+  /* Navigation entre les pages — placee sous le compteur, dans le flux normal */
+  .topnav { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+            padding: 0; margin-top: 34px; position: relative; z-index: 10; }
+  .topnav a { color: #7d8590; text-decoration: none; font-size: .84rem;
+              font-weight: 600; transition: .2s; }
+  .topnav a:hover, .topnav a.actif { color: #ff9f43; }
+
+  @media (max-height: 660px) { .pub { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="pub haut" id="pub-haut">Emplacement publicitaire</div>
+
+<div class="scene">
+  <div class="boite" id="boite" role="button" tabindex="0" aria-label="Ouvrir la boîte">
+
+    <svg class="couvercle" viewBox="0 0 200 70" aria-hidden="true">
+      <defs>
+        <linearGradient id="gc" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffb066"/>
+          <stop offset="100%" stop-color="#e8722a"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="18" width="200" height="52" rx="7" fill="url(#gc)"/>
+      <rect x="0" y="18" width="200" height="10" rx="5" fill="#ffd0a3" opacity=".55"/>
+      <rect x="88" y="18" width="24" height="52" fill="#c25a1c" opacity=".55"/>
+    </svg>
+
+    <svg class="chat" id="chat" viewBox="0 0 140 145" aria-hidden="true"></svg>
+
+    <svg viewBox="0 0 200 190" aria-hidden="true"
+         style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1">
+      <defs>
+        <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8722a"/>
+          <stop offset="100%" stop-color="#a8440f"/>
+        </linearGradient>
+      </defs>
+      <rect x="6" y="62" width="188" height="122" rx="9" fill="url(#gb)"/>
+      <rect x="6" y="62" width="188" height="14" rx="7" fill="#ffb066" opacity=".5"/>
+      <rect x="86" y="62" width="28" height="122" fill="#8c3609" opacity=".45"/>
+      <text x="100" y="128" text-anchor="middle" font-size="26" font-weight="bold"
+            fill="#ffffff" opacity=".85" font-family="system-ui, sans-serif"
+            letter-spacing="-0.5">Kikiou-Box</text>
+    </svg>
+  </div>
+</div>
+
+<p class="hint" id="hint">Clique pour ouvrir</p>
+<p class="compteur">Boîtes ouvertes : <b id="nb">0</b></p>
+
+<nav class="topnav">
+  <a href="/" class="actif">Le jeu</a>
+  <a href="/chats.html">Les 25 chats</a>
+  <a href="/apropos.html">À propos</a>
+  <a href="/contact.html">Contact</a>
+</nav>
+
+<div class="pub bas" id="pub-bas">Emplacement publicitaire</div>
+<footer>
+  <a href="/" style="color:#484f58;text-decoration:none;margin:0 8px;">Le jeu</a>
+  <a href="/chats.html" style="color:#484f58;text-decoration:none;margin:0 8px;">Les 25 chats</a>
+  <a href="/apropos.html" style="color:#484f58;text-decoration:none;margin:0 8px;">À propos</a>
+  <a href="/contact.html" style="color:#484f58;text-decoration:none;margin:0 8px;">Contact</a>
+  <a href="/mentions-legales.html" style="color:#484f58;text-decoration:none;margin:0 8px;">Mentions légales</a>
+  <a href="/confidentialite.html" style="color:#484f58;text-decoration:none;margin:0 8px;">Confidentialité</a>
+  <span style="color:#21262d;margin:0 8px;">Kikiou-Box v3</span>
+</footer>
+
+<script src="/assets/chats.js"></script>
+<script>
+// ============================================================
+//  LE CHAT — un seul personnage, plusieurs expressions
+//  Style kawaii japonais : tête ronde, oreilles triangulaires,
+//  museau clair, joues roses, grands yeux, moustaches, queue.
+// ============================================================
+// Les personnages et la fonction de dessin sont dans assets/chats.js
+// (fichier partage avec la page galerie chats.html)
+
+const boite = document.getElementById('boite');
+const chat  = document.getElementById('chat');
+const hint  = document.getElementById('hint');
+const nbEl  = document.getElementById('nb');
+
+let ouverte = false;
+let compteur = 0;
+let derniere = -1;
+let minuteurFermeture = null;
+
+function tirer() {
+  let i;
+  do { i = Math.floor(Math.random() * EXPRESSIONS.length); }
+  while (i === derniere && EXPRESSIONS.length > 1);
+  derniere = i;
+  return EXPRESSIONS[i];
+}
+
+function fermer() {
+  boite.classList.remove('ouverte', 'flotte');
+  ouverte = false;
+  hint.textContent = "Clique pour rouvrir";
+  hint.classList.remove('vide');
+}
+
+function ouvrir() {
+  if (ouverte) {
+    clearTimeout(minuteurFermeture);
+    fermer();
+    return;
+  }
+
+  const e = tirer();
+  chat.innerHTML = dessinerChat(e);
+
+  boite.classList.add('secoue');
+  setTimeout(() => {
+    boite.classList.remove('secoue');
+    boite.classList.add('ouverte');
+    setTimeout(() => boite.classList.add('flotte'), 520);
+  }, 320);
+
+  ouverte = true;
+  compteur++;
+  nbEl.textContent = compteur;
+  hint.textContent = "";
+  hint.classList.add('vide');
+
+  // Refermeture automatique 2 secondes apres l'ouverture
+  clearTimeout(minuteurFermeture);
+  minuteurFermeture = setTimeout(fermer, 2000 + 320);
+}
+
+boite.addEventListener('click', ouvrir);
+boite.addEventListener('keydown', ev => {
+  if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); ouvrir(); }
+});
+
+chat.innerHTML = dessinerChat(EXPRESSIONS[0]);
+</script>
+</body>
+</html>
