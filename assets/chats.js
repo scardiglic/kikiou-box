@@ -243,8 +243,14 @@ function dessinerChat(e) {
     s += '<path d="M78 6 l4 4 -4 4 -4 -4z" fill="#ffd166" opacity=".8"/>';
   }
   if (e.extra === "cape") {
-    s += '<path d="M18 74 q-8 40 6 52 h92 q14 -12 6 -52 q-22 -14 -52 -14 t-52 14z" fill="#1a0f1f" opacity=".85"/>';
-    s += '<path d="M52 62 l18 22 18 -22" stroke="#8b0f0f" stroke-width="3" fill="none"/>';
+    // Cape entierement SOUS le menton (le visage finit vers y=100).
+    // Deux pans lateraux + un col bas, aucun contact avec la figure.
+    s += '<path d="M22 108 q-12 22 -6 38 h30 q-6 -24 -4 -38z" fill="#1a0f1f" opacity=".92"/>';
+    s += '<path d="M118 108 q12 22 6 38 h-30 q6 -24 4 -38z" fill="#1a0f1f" opacity=".92"/>';
+    // Col pose sur les epaules, sous le menton
+    s += '<path d="M46 106 q24 -6 48 0 l5 12 q-29 -8 -58 0z" fill="#2b1a2e"/>';
+    // Lisere rouge du col
+    s += '<path d="M48 109 q22 -5 44 0" stroke="#8b0f0f" stroke-width="2.2" fill="none" opacity=".85"/>';
   }
   if (e.extra === "bandelettes") {
     s += '<path d="M32 40 q38 -10 76 0" stroke="#f0ece0" stroke-width="7" fill="none" opacity=".95"/>';
