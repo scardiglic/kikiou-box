@@ -199,7 +199,11 @@
 <script>
 EXPRESSIONS.forEach((e, i) => {
   const cible = document.getElementById('c' + i);
-  if (cible) cible.innerHTML = dessinerChat(e);
+  if (!cible) return;
+  // dessinerChat renvoie des <path> bruts : il faut les envelopper
+  // dans une balise <svg> pour que le navigateur les affiche.
+  cible.innerHTML = '<svg viewBox="0 0 140 145" aria-hidden="true">'
+                  + dessinerChat(e) + '</svg>';
 });
 </script>
 </body>
