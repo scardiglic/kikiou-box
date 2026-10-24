@@ -5,9 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kikiou-Box — Édition Halloween 🎃</title>
 <meta name="description" content="Clique sur la boîte. Une créature d’Halloween en sort. Tu ne sais pas laquelle.">
-<meta property="og:title" content="Kikiou-Box">
-<meta property="og:description" content="Clique sur la boîte. Un petit chat kawaii en sort.">
+<meta property="og:title" content="Kikiou-Box — Édition Halloween 🎃">
+<meta property="og:description" content="Clique sur la boîte. Une créature d'Halloween en sort. Tu ne sais pas laquelle.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://kikiou.com/">
+<meta property="og:image" content="https://kikiou.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Un chat d'Halloween sort d'une boîte orange Kikiou-Box">
+<meta property="og:site_name" content="Kikiou-Box">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kikiou-Box — Édition Halloween 🎃">
+<meta name="twitter:description" content="Clique sur la boîte. Une créature d'Halloween en sort.">
+<meta name="twitter:image" content="https://kikiou.com/assets/og-image.png">
 <meta name="theme-color" content="#0a0d14">
 
 <!-- Statistiques de consultation — GoatCounter (sans cookie, respecte la vie privée) -->
@@ -118,6 +129,61 @@
               font-weight: 600; transition: .2s; }
   .topnav a:hover, .topnav a.actif { color: #ff9f43; }
 
+
+  /* Bouton de partage (moteur de viralite) */
+  .partage {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin: 14px auto 0;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .25s ease, transform .25s ease;
+    pointer-events: none;
+    max-width: 420px;
+    padding: 0 16px;
+  }
+  .partage.visible { opacity: 1; transform: none; pointer-events: auto; }
+  .partage button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 16px;
+    border: 0;
+    border-radius: 10px;
+    font: inherit;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #0a0d14;
+    background: linear-gradient(180deg, #ffb066, #e8722a);
+    box-shadow: 0 3px 0 #a8440f;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .partage button:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #a8440f;
+  }
+  .partage button.alt {
+    background: linear-gradient(180deg, #3a4152, #262c38);
+    color: #e6e9ef;
+    box-shadow: 0 3px 0 #14171e;
+  }
+  .partage button.alt:active { box-shadow: 0 1px 0 #14171e; }
+  .partage .confirme {
+    font-size: .82rem;
+    color: #6ee7a8;
+    text-align: center;
+    width: 100%;
+  }
+  @media (max-width: 420px) {
+    .partage { flex-direction: column; }
+    .partage button { width: 100%; }
+  }
+
   @media (max-height: 660px) { .pub { display: none; } }
 </style>
 </head>
@@ -162,6 +228,15 @@
 
 <p class="hint" id="hint">Clique pour ouvrir</p>
 <p class="compteur">Boîtes ouvertes : <b id="nb">0</b></p>
+
+<div class="partage" id="partage">
+  <button id="btn-partage" type="button">
+    <span aria-hidden="true">📤</span> Partager mon chat
+  </button>
+  <button id="btn-lien" type="button" class="alt">
+    <span aria-hidden="true">🔗</span> Copier le lien
+  </button>
+</div>
 
 <nav class="topnav">
   <a href="/" class="actif">Le jeu</a>
@@ -238,6 +313,7 @@ function ouvrir() {
   nbEl.textContent = compteur;
   hint.textContent = "";
   hint.classList.add('vide');
+  afficherPartage(e);
 
   // Refermeture automatique 2 secondes apres l'ouverture
   clearTimeout(minuteurFermeture);
@@ -248,6 +324,93 @@ boite.addEventListener('click', ouvrir);
 boite.addEventListener('keydown', ev => {
   if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); ouvrir(); }
 });
+
+
+// ------------------------------------------------------------
+//  Partage social — moteur de viralite
+//  Le lien contient le chat obtenu : en ouvrant, le visiteur
+//  decouvre le meme chat.
+// ------------------------------------------------------------
+const partageEl = document.getElementById('partage');
+const btnPartage = document.getElementById('btn-partage');
+const btnLien = document.getElementById('btn-lien');
+
+let dernierChat = null;
+
+function textePartage(e) {
+  return "J'ai eu « " + e.nom + " » dans la Kikiou-Box ! 🎃 "
+       + "Clique pour voir lequel tu obtiens :";
+}
+
+function lienAvecChat(e) {
+  return "https://kikiou.com/?chat=" + encodeURIComponent(e.nom);
+}
+
+function afficherPartage(e) {
+  dernierChat = e;
+  partageEl.classList.add('visible');
+}
+
+if (btnPartage) {
+  btnPartage.addEventListener('click', async () => {
+    if (!dernierChat) return;
+    const texte = textePartage(dernierChat);
+    const url = lienAvecChat(dernierChat);
+
+    // API native de partage (mobile) si disponible
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Kikiou-Box", text: texte, url: url });
+        return;
+      } catch (err) {
+        // l'utilisateur a annule : on continue vers le repli
+      }
+    }
+    // Repli : X / Twitter
+    window.open("https://twitter.com/intent/tweet?text="
+      + encodeURIComponent(texte) + "&url=" + encodeURIComponent(url),
+      "_blank", "noopener");
+  });
+}
+
+if (btnLien) {
+  btnLien.addEventListener('click', async () => {
+    if (!dernierChat) return;
+    const url = lienAvecChat(dernierChat);
+    try {
+      await navigator.clipboard.writeText(url);
+      const avant = btnLien.innerHTML;
+      btnLien.innerHTML = "✅ Lien copié";
+      setTimeout(() => { btnLien.innerHTML = avant; }, 1600);
+    } catch (err) {
+      // repli si le presse-papiers est bloque
+      window.prompt("Copie ce lien :", url);
+    }
+  });
+}
+
+
+// ------------------------------------------------------------
+//  Lien recu : ?chat=Nom  -> on ouvre directement ce chat
+// ------------------------------------------------------------
+(function ouvrirDepuisLien() {
+  const params = new URLSearchParams(location.search);
+  const nom = params.get('chat');
+  if (!nom) return;
+  const e = EXPRESSIONS.find(x => x.nom.toLowerCase() === nom.toLowerCase());
+  if (!e) return;
+
+  setTimeout(() => {
+    chat.innerHTML = dessinerChat(e);
+    boite.classList.add('ouverte', 'flotte');
+    ouverte = true;
+    compteur++;
+    nbEl.textContent = compteur;
+    hint.textContent = "";
+    hint.classList.add('vide');
+    afficherPartage(e);
+  }, 600);
+})();
 
 chat.innerHTML = dessinerChat(EXPRESSIONS[0]);
 </script>
