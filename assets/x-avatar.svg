@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="fond" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2233"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+    <linearGradient id="robe" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff8c42"/>
+      <stop offset="100%" stop-color="#e8722a"/>
+    </linearGradient>
+    <linearGradient id="boite" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8722a"/>
+      <stop offset="100%" stop-color="#a8440f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="400" height="400" fill="url(#fond)"/>
+
+  <!-- Etoiles -->
+  <g fill="#ffb066" opacity="0.4">
+    <circle cx="60" cy="70" r="3"/>
+    <circle cx="330" cy="55" r="2.5"/>
+    <circle cx="355" cy="140" r="2"/>
+    <circle cx="45" cy="180" r="2"/>
+    <circle cx="90" cy="330" r="2.5"/>
+    <circle cx="320" cy="340" r="2"/>
+  </g>
+
+  <!-- Le chat qui sort de la boite (gros plan) -->
+  <g transform="translate(200, 250)">
+
+    <!-- oreilles -->
+    <path d="M -78 -88 L -92 -152 L -34 -116 Z" fill="url(#robe)"/>
+    <path d="M -78 -88 L -92 -152 L -34 -116 Z" fill="#ffb066" opacity="0.35"
+          transform="translate(0,10) scale(0.7)"/>
+    <path d="M 78 -88 L 92 -152 L 34 -116 Z" fill="url(#robe)"/>
+    <path d="M 78 -88 L 92 -152 L 34 -116 Z" fill="#ffb066" opacity="0.35"
+          transform="translate(0,10) scale(0.7)"/>
+
+    <!-- tete -->
+    <ellipse cx="0" cy="-40" rx="102" ry="90" fill="url(#robe)"/>
+
+    <!-- chapeau de sorciere -->
+    <path d="M -82 -108 L 0 -215 L 82 -108 Z" fill="#6b4fa0"/>
+    <rect x="-100" y="-118" width="200" height="20" rx="10" fill="#4a3570"/>
+    <circle cx="0" cy="-215" r="12" fill="#ffb066"/>
+
+    <!-- yeux -->
+    <ellipse cx="-38" cy="-52" rx="14" ry="17" fill="#141a26"/>
+    <ellipse cx="38" cy="-52" rx="14" ry="17" fill="#141a26"/>
+    <circle cx="-33" cy="-58" r="5" fill="#ffffff" opacity="0.9"/>
+    <circle cx="43" cy="-58" r="5" fill="#ffffff" opacity="0.9"/>
+
+    <!-- joues -->
+    <ellipse cx="-66" cy="-18" rx="17" ry="11" fill="#ff6b9d" opacity="0.45"/>
+    <ellipse cx="66" cy="-18" rx="17" ry="11" fill="#ff6b9d" opacity="0.45"/>
+
+    <!-- bouche -->
+    <path d="M -20 -12 Q 0 8 20 -12" stroke="#141a26" stroke-width="6"
+          fill="none" stroke-linecap="round"/>
+
+    <!-- moustaches -->
+    <g stroke="#141a26" stroke-width="3.5" opacity="0.45" stroke-linecap="round">
+      <line x1="-108" y1="-40" x2="-146" y2="-50"/>
+      <line x1="-108" y1="-24" x2="-146" y2="-22"/>
+      <line x1="108" y1="-40" x2="146" y2="-50"/>
+      <line x1="108" y1="-24" x2="146" y2="-22"/>
+    </g>
+
+    <!-- corps de la boite -->
+    <rect x="-118" y="46" width="236" height="120" rx="12" fill="url(#boite)"/>
+    <rect x="-118" y="46" width="236" height="18" rx="9" fill="#ffb066" opacity="0.5"/>
+    <rect x="-22" y="46" width="44" height="120" fill="#8c3609" opacity="0.45"/>
+  </g>
+</svg>

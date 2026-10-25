@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" width="1500" height="500">
+  <defs>
+    <linearGradient id="fond" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a2233"/>
+      <stop offset="55%" stop-color="#141a26"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+    <linearGradient id="robe" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff8c42"/>
+      <stop offset="100%" stop-color="#e8722a"/>
+    </linearGradient>
+    <linearGradient id="boite" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8722a"/>
+      <stop offset="100%" stop-color="#a8440f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1500" height="500" fill="url(#fond)"/>
+
+  <!-- Etoiles / ambiance -->
+  <g fill="#ffb066" opacity="0.35">
+    <circle cx="90" cy="70" r="3"/>
+    <circle cx="240" cy="45" r="2"/>
+    <circle cx="420" cy="90" r="2.5"/>
+    <circle cx="620" cy="55" r="2"/>
+    <circle cx="1180" cy="80" r="3"/>
+    <circle cx="1350" cy="130" r="2"/>
+    <circle cx="1420" cy="60" r="2.5"/>
+    <circle cx="150" cy="420" r="2"/>
+    <circle cx="480" cy="450" r="2.5"/>
+    <circle cx="1300" cy="430" r="2"/>
+  </g>
+
+  <!-- ============ COTE GAUCHE : le chat ============ -->
+  <g transform="translate(300, 300)">
+    <!-- oreilles -->
+    <path d="M -72 -84 L -86 -144 L -32 -110 Z" fill="url(#robe)"/>
+    <path d="M 72 -84 L 86 -144 L 32 -110 Z" fill="url(#robe)"/>
+
+    <!-- tete -->
+    <ellipse cx="0" cy="-38" rx="96" ry="84" fill="url(#robe)"/>
+
+    <!-- chapeau de sorciere -->
+    <path d="M -78 -102 L 0 -200 L 78 -102 Z" fill="#6b4fa0"/>
+    <rect x="-94" y="-112" width="188" height="18" rx="9" fill="#4a3570"/>
+    <circle cx="0" cy="-200" r="11" fill="#ffb066"/>
+
+    <!-- yeux -->
+    <ellipse cx="-36" cy="-50" rx="13" ry="16" fill="#141a26"/>
+    <ellipse cx="36" cy="-50" rx="13" ry="16" fill="#141a26"/>
+    <circle cx="-31" cy="-56" r="5" fill="#ffffff" opacity="0.9"/>
+    <circle cx="41" cy="-56" r="5" fill="#ffffff" opacity="0.9"/>
+
+    <!-- joues -->
+    <ellipse cx="-62" cy="-16" rx="16" ry="10" fill="#ff6b9d" opacity="0.45"/>
+    <ellipse cx="62" cy="-16" rx="16" ry="10" fill="#ff6b9d" opacity="0.45"/>
+
+    <!-- bouche -->
+    <path d="M -19 -10 Q 0 9 19 -10" stroke="#141a26" stroke-width="6"
+          fill="none" stroke-linecap="round"/>
+
+    <!-- moustaches -->
+    <g stroke="#141a26" stroke-width="3.5" opacity="0.45" stroke-linecap="round">
+      <line x1="-102" y1="-38" x2="-138" y2="-48"/>
+      <line x1="-102" y1="-22" x2="-138" y2="-20"/>
+      <line x1="102" y1="-38" x2="138" y2="-48"/>
+      <line x1="102" y1="-22" x2="138" y2="-20"/>
+    </g>
+
+    <!-- corps de la boite -->
+    <rect x="-112" y="44" width="224" height="118" rx="12" fill="url(#boite)"/>
+    <rect x="-112" y="44" width="224" height="17" rx="8" fill="#ffb066" opacity="0.5"/>
+    <rect x="-21" y="44" width="42" height="118" fill="#8c3609" opacity="0.45"/>
+    <text x="0" y="122" text-anchor="middle" font-family="system-ui, sans-serif"
+          font-size="34" font-weight="bold" fill="#ffffff" opacity="0.9">Kikiou-Box</text>
+  </g>
+
+  <!-- ============ COTE DROIT : texte ============ -->
+  <g transform="translate(620, 0)">
+    <!-- Titre -->
+    <text x="0" y="175" font-family="system-ui, -apple-system, sans-serif"
+          font-size="86" font-weight="800" fill="#ffb066" letter-spacing="-3">Kikiou-Box</text>
+
+    <!-- Sous-titre -->
+    <text x="0" y="235" font-family="system-ui, -apple-system, sans-serif"
+          font-size="34" font-weight="500" fill="#8b95a5">Édition Halloween 🎃</text>
+
+    <!-- Accroche -->
+    <text x="0" y="305" font-family="system-ui, -apple-system, sans-serif"
+          font-size="30" font-weight="500" fill="#c9d1d9">Clique sur la boîte.</text>
+    <text x="0" y="345" font-family="system-ui, -apple-system, sans-serif"
+          font-size="30" font-weight="500" fill="#c9d1d9">Découvre ton chat.</text>
+
+    <!-- URL -->
+    <text x="0" y="420" font-family="system-ui, sans-serif"
+          font-size="28" font-weight="700" fill="#6ee7a8">kikiou.com</text>
+  </g>
+</svg>
