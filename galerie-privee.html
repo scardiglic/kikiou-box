@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Kikiou — galerie privée (choix des visuels)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0d14;
+    color: #e6e9ef;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 32px 20px 60px;
+  }
+  header { max-width: 1100px; margin: 0 auto 28px; }
+  h1 { font-size: 1.5rem; color: #ffb066; font-weight: 700; }
+  .sous { color: #8b95a5; font-size: .92rem; margin-top: 6px; }
+  .barre {
+    max-width: 1100px; margin: 0 auto 22px;
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  }
+  .barre input {
+    flex: 1; min-width: 200px;
+    background: #141a26; border: 1px solid #2a3244; border-radius: 9px;
+    padding: 11px 14px; color: #e6e9ef; font: inherit;
+  }
+  .barre input:focus { outline: none; border-color: #ffb066; }
+  .barre button {
+    background: linear-gradient(180deg, #ffb066, #e8722a);
+    border: 0; border-radius: 9px; padding: 11px 18px;
+    font: inherit; font-weight: 600; color: #0a0d14; cursor: pointer;
+    box-shadow: 0 3px 0 #a8440f;
+  }
+  .barre button:active { transform: translateY(2px); box-shadow: 0 1px 0 #a8440f; }
+  .barre button.alt {
+    background: #262c38; color: #e6e9ef; box-shadow: 0 3px 0 #14171e;
+  }
+  .barre button.alt:active { box-shadow: 0 1px 0 #14171e; }
+  .compte { color: #6ee7a8; font-size: .9rem; font-weight: 600; }
+
+  .grille {
+    max-width: 1100px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+  }
+  .carte {
+    background: #141a26;
+    border: 1px solid #232b3a;
+    border-radius: 14px;
+    padding: 14px 10px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    position: relative;
+  }
+  .carte:hover { transform: translateY(-3px); border-color: #ffb066; background: #182030; }
+  .carte.choisi { border-color: #6ee7a8; background: #16241c; }
+  .carte.choisi::after {
+    content: "✓";
+    position: absolute; top: 8px; right: 11px;
+    color: #6ee7a8; font-weight: 700; font-size: 1.05rem;
+  }
+  .carte svg { width: 100%; height: auto; display: block; }
+  .nom {
+    margin-top: 10px; font-size: .9rem; font-weight: 600; color: #c9d1d9;
+  }
+  .num { color: #5a6478; font-size: .74rem; margin-top: 2px; }
+
+  .apercu {
+    max-width: 1100px; margin: 40px auto 0;
+    background: #141a26; border: 1px solid #232b3a; border-radius: 14px;
+    padding: 20px;
+  }
+  .apercu h2 { font-size: 1.05rem; color: #ffb066; margin-bottom: 14px; }
+  .apercu .ligne { display: flex; gap: 26px; flex-wrap: wrap; align-items: flex-start; }
+  .bloc { text-align: center; }
+  .bloc .etiq { font-size: .78rem; color: #8b95a5; margin-bottom: 8px; }
+  .bloc img { border-radius: 10px; display: block; max-width: 100%; }
+  #cadre-avatar { width: 160px; height: 160px; border-radius: 50%; overflow: hidden; border: 3px solid #2a3244; }
+  #cadre-banniere { width: 460px; max-width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid #2a3244; }
+  .vide { color: #5a6478; font-size: .88rem; font-style: italic; padding: 24px 0; }
+  .aide {
+    max-width: 1100px; margin: 22px auto 0;
+    color: #5a6478; font-size: .82rem; line-height: 1.6;
+  }
+  .aide code { background: #141a26; padding: 2px 6px; border-radius: 5px; color: #8b95a5; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Galerie privée — les 25 kikiou d'origine</h1>
+  <p class="sous">Clique sur un chat pour le sélectionner, puis génère l'avatar et la bannière avec.</p>
+</header>
+
+<div class="barre">
+  <input type="text" id="recherche" placeholder="Filtrer par nom…" autocomplete="off">
+  <button id="btn-avatar">Générer l'avatar</button>
+  <button id="btn-banniere">Générer la bannière</button>
+  <button class="alt" id="btn-reset">Tout effacer</button>
+  <span class="compte" id="compte"></span>
+</div>
+
+<div class="grille" id="grille"></div>
+
+<div class="apercu">
+  <h2>Aperçu</h2>
+  <div class="ligne" id="apercu">
+    <p class="vide">Aucun chat sélectionné.</p>
+  </div>
+</div>
+
+<p class="aide">
+  <b>Astuce :</b> les images générées apparaissent ici et sont aussi téléchargées automatiquement
+  (<code>kikiou-avatar.png</code> et <code>kikiou-banniere.png</code>).<br>
+  Cette page est locale : elle n'est pas publiée sur kikiou.com.
+</p>
+
+<script src="versions/chats_kikiou_25_20261021.js"></script>
+<script>
+// ------------------------------------------------------------
+//  Galerie privee — choix d'un kikiou pour les visuels X
+// ------------------------------------------------------------
+const grille = document.getElementById('grille');
+const apercu = document.getElementById('apercu');
+const compte = document.getElementById('compte');
+const recherche = document.getElementById('recherche');
+
+let choisi = null;
+
+// ---------- cartes ----------
+function construire(filtre) {
+  grille.innerHTML = '';
+  const f = (filtre || '').trim().toLowerCase();
+  let n = 0;
+
+  EXPRESSIONS.forEach((e, i) => {
+    if (f && !e.nom.toLowerCase().includes(f)) return;
+    n++;
+
+    const carte = document.createElement('div');
+    carte.className = 'carte' + (choisi === i ? ' choisi' : '');
+    carte.dataset.i = i;
+
+    carte.innerHTML =
+      '<svg viewBox="0 0 140 145" aria-hidden="true">' + dessinerChat(e) + '</svg>' +
+      '<div class="nom">' + e.nom + '</div>' +
+      '<div class="num">n° ' + (i + 1) + '</div>';
+
+    carte.addEventListener('click', () => {
+      choisi = (choisi === i) ? null : i;
+      construire(recherche.value);
+      majApercu();
+    });
+
+    grille.appendChild(carte);
+  });
+
+  compte.textContent = n + ' chat' + (n > 1 ? 's' : '') +
+    (choisi !== null ? '  •  sélection : ' + EXPRESSIONS[choisi].nom : '');
+}
+
+// ---------- generation des images ----------
+function dessinerAvec(e, largeur, hauteur, mode) {
+  // Renvoie une data URL PNG via un canvas
+  return new Promise(resolve => {
+    const svg = construireSVG(e, largeur, hauteur, mode);
+    const img = new Image();
+    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    img.onload = () => {
+      const cv = document.createElement('canvas');
+      cv.width = largeur;
+      cv.height = hauteur;
+      const ctx = cv.getContext('2d');
+      ctx.drawImage(img, 0, 0, largeur, hauteur);
+      URL.revokeObjectURL(url);
+      resolve(cv.toDataURL('image/png'));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+
+function construireSVG(e, L, H, mode) {
+  const dessin = dessinerChat(e);
+
+  if (mode === 'avatar') {
+    // 400 x 400 : gros plan
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${L}" height="${H}" viewBox="0 0 400 400">
+      <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#1a2233"/><stop offset="100%" stop-color="#0a0d14"/>
+      </linearGradient></defs>
+      <rect width="400" height="400" fill="url(#bg)"/>
+      <g fill="#ffb066" opacity="0.4">
+        <circle cx="55" cy="60" r="3"/><circle cx="340" cy="45" r="2.5"/>
+        <circle cx="360" cy="130" r="2"/><circle cx="40" cy="170" r="2"/>
+        <circle cx="80" cy="350" r="2.5"/><circle cx="330" cy="355" r="2"/>
+      </g>
+      <g transform="translate(280, 320) rotate(6)">
+        <rect x="0" y="0" width="100" height="18" rx="4" fill="#ffb066"/>
+        <rect x="0" y="0" width="100" height="5" rx="2.5" fill="#ffd0a3" opacity=".65"/>
+        <rect x="0" y="16" width="100" height="5" rx="2.5" fill="#c25a1c"/>
+      </g>
+      <g transform="translate(38, 40) scale(1.6)">${dessin}</g>
+      <path d="M 72 262 L 328 262 L 342 296 L 58 296 Z" fill="#8c3609"/>
+      <path d="M 77 266 L 323 266 L 333 292 L 67 292 Z" fill="#3d1704"/>
+      <ellipse cx="200" cy="282" rx="72" ry="11" fill="#1f0b02" opacity=".7"/>
+      <path d="M 58 296 L 342 296 L 332 372 L 68 372 Z" fill="#a8440f"/>
+      <path d="M 58 296 L 342 296 L 339 307 L 61 307 Z" fill="#c25a1c"/>
+      <path d="M 182 296 L 218 296 L 214 372 L 186 372 Z" fill="#8c3609" opacity=".5"/>
+    </svg>`;
+  }
+
+  // banniere 1500 x 500
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${L}" height="${H}" viewBox="0 0 1500 500">
+    <defs><linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a2233"/><stop offset="55%" stop-color="#141a26"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient></defs>
+    <rect width="1500" height="500" fill="url(#bg2)"/>
+    <g fill="#ffb066" opacity="0.35">
+      <circle cx="90" cy="70" r="3"/><circle cx="240" cy="45" r="2"/>
+      <circle cx="420" cy="90" r="2.5"/><circle cx="620" cy="55" r="2"/>
+      <circle cx="1180" cy="80" r="3"/><circle cx="1350" cy="130" r="2"/>
+      <circle cx="1420" cy="60" r="2.5"/><circle cx="150" cy="430" r="2"/>
+      <circle cx="480" cy="460" r="2.5"/><circle cx="1320" cy="440" r="2"/>
+    </g>
+    <svg x="60" y="0" width="400" height="500" viewBox="0 0 400 500">
+      <g transform="translate(262, 398) rotate(6)">
+        <rect x="0" y="0" width="130" height="24" rx="5" fill="#ffb066"/>
+        <rect x="0" y="0" width="130" height="7" rx="3" fill="#ffd0a3" opacity=".65"/>
+        <rect x="0" y="21" width="130" height="7" rx="3" fill="#c25a1c"/>
+      </g>
+      <g transform="translate(60, 55) scale(1.55)">${dessin}</g>
+      <path d="M 62 250 L 338 250 L 356 292 L 44 292 Z" fill="#8c3609"/>
+      <path d="M 68 254 L 332 254 L 344 288 L 56 288 Z" fill="#3d1704"/>
+      <ellipse cx="200" cy="276" rx="86" ry="14" fill="#1f0b02" opacity=".7"/>
+      <path d="M 44 292 L 356 292 L 344 420 L 56 420 Z" fill="#a8440f"/>
+      <path d="M 44 292 L 356 292 L 353 306 L 47 306 Z" fill="#c25a1c"/>
+      <path d="M 176 292 L 224 292 L 219 420 L 181 420 Z" fill="#8c3609" opacity=".5"/>
+      <text x="200" y="378" text-anchor="middle" font-size="36" font-weight="bold"
+            fill="#ffffff" opacity=".92">Kikiou-Box</text>
+    </svg>
+    <text x="560" y="218" font-family="system-ui, sans-serif" font-size="88"
+          font-weight="800" fill="#ffb066" letter-spacing="-3">Kikiou-Box</text>
+    <text x="560" y="270" font-family="system-ui, sans-serif" font-size="33"
+          font-weight="500" fill="#8b95a5">25 petits chats à collectionner</text>
+    <text x="560" y="355" font-family="system-ui, sans-serif" font-size="30"
+          font-weight="500" fill="#c9d1d9">Clique sur la boîte.</text>
+    <text x="560" y="395" font-family="system-ui, sans-serif" font-size="30"
+          font-weight="500" fill="#c9d1d9">Découvre ton chat.</text>
+    <text x="560" y="460" font-family="system-ui, sans-serif" font-size="29"
+          font-weight="700" fill="#6ee7a8">kikiou.com</text>
+  </svg>`;
+}
+
+function telecharger(dataUrl, nomFichier) {
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = nomFichier;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function generer(mode) {
+  if (choisi === null) {
+    alert("Choisis d'abord un chat.");
+    return;
+  }
+  const e = EXPRESSIONS[choisi];
+  const L = mode === 'avatar' ? 400 : 1500;
+  const H = mode === 'avatar' ? 400 : 500;
+
+  const data = await dessinerAvec(e, L, H, mode);
+  if (!data) { alert('Échec de la génération.'); return; }
+
+  telecharger(data, mode === 'avatar' ? 'kikiou-avatar.png' : 'kikiou-banniere.png');
+  afficherApercu(e, data, mode);
+}
+
+function afficherApercu(e, dataUrl, mode) {
+  const id = mode === 'avatar' ? 'ap-avatar' : 'ap-banniere';
+  let bloc = document.getElementById(id);
+
+  if (!bloc) {
+    apercu.querySelector('.vide')?.remove();
+    bloc = document.createElement('div');
+    bloc.className = 'bloc';
+    bloc.id = id;
+    apercu.appendChild(bloc);
+  }
+
+  bloc.innerHTML =
+    '<div class="etiq">' + (mode === 'avatar' ? 'Avatar 400×400' : 'Bannière 1500×500') +
+    ' — ' + e.nom + '</div>' +
+    '<div id="cadre-' + mode + '"><img src="' + dataUrl + '" alt="' + e.nom + '"></div>';
+}
+
+function majApercu() {
+  if (choisi === null) {
+    apercu.innerHTML = '<p class="vide">Aucun chat sélectionné.</p>';
+  }
+}
+
+// ---------- evenements ----------
+recherche.addEventListener('input', () => construire(recherche.value));
+document.getElementById('btn-avatar').addEventListener('click', () => generer('avatar'));
+document.getElementById('btn-banniere').addEventListener('click', () => generer('banniere'));
+document.getElementById('btn-reset').addEventListener('click', () => {
+  choisi = null;
+  construire(recherche.value);
+  apercu.innerHTML = '<p class="vide">Aucun chat sélectionné.</p>';
+});
+
+construire('');
+</script>
+</body>
+</html>
